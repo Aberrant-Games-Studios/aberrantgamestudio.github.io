@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>ORDER // ONE — Aberrant Games</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Share+Tech+Mono&family=Barlow:ital,wght@0,300;0,400;0,600;1,300&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --red:#e01c1c;--red-glow:#ff2a2a;--white:#f0f0f0;--dim:#7a7a7a;
+    --bg:#050507;--surface:#0c0c10;--border:rgba(224,28,28,0.22);--green:#1db954;
+    --fd:'Bebas Neue',sans-serif;--fm:'Share Tech Mono',monospace;--fb:'Barlow',sans-serif;
+  }
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{background:var(--bg);color:var(--white);font-family:var(--fb);overflow-x:hidden;cursor:crosshair}
+  body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:9998;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.05) 2px,rgba(0,0,0,0.05) 4px)}
+  ::-webkit-scrollbar{width:3px}::-webkit-scrollbar-track{background:var(--bg)}::-webkit-scrollbar-thumb{background:var(--red)}
+
+  /* NAV */
+  nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:16px 56px;background:linear-gradient(to bottom,rgba(5,5,7,.97) 60%,transparent);transition:opacity .35s,transform .35s}
+  .nav-logo{display:flex;align-items:center;gap:11px;text-decoration:none}
+  .nav-logo img{height:44px;width:44px;object-fit:contain;filter:brightness(1) invert(0)}
+  .nav-studio{font-family:var(--fd);font-size:1rem;letter-spacing:.12em;color:var(--white)}
+  .nav-links{display:flex;gap:32px;list-style:none}
+  .nav-links a{font-family:var(--fm);font-size:.66rem;letter-spacing:.22em;color:var(--dim);text-decoration:none;text-transform:uppercase;transition:color .18s}
+  .nav-links a:hover{color:var(--red)}
+
+  /* HERO */
+  .hero{position:relative;width:100%;height:auto;padding:120px 0 0;display:flex;flex-direction:column;justify-content:flex-end;overflow:hidden}
+  .hero-bg{position:absolute;inset:0;background-size:cover;background-position:center right;animation:heroZoom 16s ease-out forwards}
+  @keyframes heroZoom{from{transform:scale(1.06)}to{transform:scale(1)}}
+  .hero-bg::after{content:'';position:absolute;inset:0;background:linear-gradient(105deg,rgba(5,5,7,.94) 25%,rgba(5,5,7,.55) 55%,transparent 80%),linear-gradient(to top,rgba(5,5,7,1) 0%,rgba(5,5,7,.4) 28%,transparent 55%)}
+  .hero-content{position:relative;z-index:2;padding:0 64px 72px;max-width:800px;animation:fadeUp 1s .25s ease both}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+  .hero-eyebrow{font-family:var(--fm);font-size:.66rem;letter-spacing:.38em;color:var(--red);text-transform:uppercase;margin-bottom:12px;display:flex;align-items:center;gap:10px}
+  .hero-eyebrow::before{content:'';width:24px;height:1px;background:var(--red)}
+  .hero-vr-badge{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--red);padding:4px 13px;margin-bottom:16px;font-family:var(--fm);font-size:.6rem;letter-spacing:.22em;color:var(--red);text-transform:uppercase}
+  .hero-vr-badge i{width:6px;height:6px;background:var(--red);border-radius:50%;animation:blink 1.6s infinite}
+  @keyframes blink{0%,100%{opacity:1}50%{opacity:.2}}
+  .hero-title{font-family:var(--fd);font-size:clamp(4.5rem,9vw,10rem);line-height:.87;letter-spacing:.03em;color:var(--white);margin-bottom:8px;text-shadow:0 0 100px rgba(224,28,28,.2)}
+  .hero-title .sl{color:var(--red);text-shadow:0 0 40px rgba(224,28,28,.9),0 0 120px rgba(224,28,28,.35)}
+  .hero-sub{font-family:var(--fb);font-weight:300;font-style:italic;font-size:1.1rem;color:var(--dim);letter-spacing:.05em;margin-bottom:28px;margin-top:6px}
+  .hero-ctas{display:flex;gap:13px;flex-wrap:wrap}
+
+  /* BUTTONS */
+  .btn{display:inline-flex;align-items:center;gap:9px;padding:13px 26px;font-family:var(--fm);font-size:.72rem;letter-spacing:.18em;text-transform:uppercase;text-decoration:none;border:none;cursor:pointer;transition:all .2s;clip-path:polygon(0 0,calc(100% - 9px) 0,100% 9px,100% 100%,9px 100%,0 calc(100% - 9px))}
+  .btn-primary{background:var(--red);color:#fff}
+  .btn-primary:hover{background:var(--red-glow);box-shadow:0 0 28px rgba(224,28,28,.6);transform:translateY(-1px)}
+  .btn-secondary{background:transparent;color:var(--white);border:1px solid var(--border)}
+  .btn-secondary:hover{border-color:var(--red);color:var(--red)}
+  .btn img{height:16px;width:auto;object-fit:contain}
+  .btn-primary img{filter:brightness(0) invert(1)}
+  .btn-secondary img{filter:brightness(1) invert(1);opacity:.7}
+
+  /* FUNDED STRIP */
+  .funded-strip{position:relative;z-index:2;border-top:1px solid var(--border);border-bottom:1px solid var(--border);background:linear-gradient(90deg,transparent,rgba(224,28,28,.05) 30%,rgba(224,28,28,.05) 70%,transparent);padding:0 64px;height:72px;display:flex;align-items:center}
+  .funded-strip::before{content:'';position:absolute;left:0;right:0;top:0;bottom:0;background:linear-gradient(90deg,var(--bg) 0%,transparent 5%,transparent 95%,var(--bg) 100%);pointer-events:none}
+  .fstat{display:flex;flex-direction:column;align-items:center;flex:1;position:relative;z-index:1}
+  .fstat+.fstat{border-left:1px solid var(--border)}
+  .fstat-num{font-family:var(--fd);font-size:1.7rem;color:var(--red);line-height:1;text-shadow:0 0 16px rgba(224,28,28,.4)}
+  .fstat-label{font-family:var(--fm);font-size:.55rem;letter-spacing:.26em;color:var(--dim);text-transform:uppercase;margin-top:2px}
+  .funded-badge{flex:1;display:flex;align-items:center;justify-content:center;position:relative;z-index:1;border-left:1px solid var(--border);font-family:var(--fm);font-size:.6rem;letter-spacing:.24em;color:var(--green);text-transform:uppercase;gap:8px;white-space:nowrap}
+  .funded-badge::before{content:'';width:6px;height:6px;background:var(--green);border-radius:50%;box-shadow:0 0 8px rgba(29,185,84,.7);animation:blink 2s infinite}
+
+  /* SECTION LABELS */
+  .sec-label{font-family:var(--fm);font-size:.6rem;letter-spacing:.36em;color:var(--red);text-transform:uppercase;margin-bottom:5px;display:flex;align-items:center;gap:10px}
+  .sec-label::after{content:'';flex:1;height:1px;background:var(--border)}
+  .sec-title{font-family:var(--fd);font-size:clamp(1.9rem,3.2vw,3rem);letter-spacing:.06em;margin-bottom:32px;color:var(--white)}
+
+  /* MEDIA */
+  .media-section{padding:80px 64px 72px;background:var(--bg)}
+  .media-dual{display:grid;grid-template-columns:1.4fr 1fr;gap:20px;align-items:start}
+  .media-block{display:flex;flex-direction:column}
+  .media-block-label{font-family:var(--fm);font-size:.58rem;letter-spacing:.3em;color:var(--dim);text-transform:uppercase;margin-bottom:10px}
+  .trailer-wrap{width:100%;aspect-ratio:16/9;background:#0a0a0e;border:1px solid var(--border);position:relative;overflow:hidden;clip-path:polygon(0 0,calc(100% - 16px) 0,100% 16px,100% 100%,16px 100%,0 calc(100% - 16px))}
+  .trailer-wrap iframe{position:absolute;inset:0;width:100%;height:100%;border:none}
+  .slideshow{width:100%;aspect-ratio:16/9;background:#0a0a0e;border:1px solid var(--border);overflow:hidden;position:relative;clip-path:polygon(0 0,calc(100% - 12px) 0,100% 12px,100% 100%,12px 100%,0 calc(100% - 12px))}
+  .slides{display:flex;width:100%;height:100%;transition:transform .65s cubic-bezier(.77,0,.18,1)}
+  .slide{min-width:100%;height:100%;position:relative;overflow:hidden}
+  .slide img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+  .slide::after{content:'';position:absolute;inset:0;background:linear-gradient(to bottom,transparent 50%,rgba(5,5,7,.5) 100%)}
+  .slide-ph{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-family:var(--fm);font-size:.7rem;letter-spacing:.2em;color:rgba(255,255,255,.1)}
+  .sl1{background:radial-gradient(ellipse at 30% 60%,#1a0505 0%,#050507 60%)}
+  .sl2{background:radial-gradient(ellipse at 70% 40%,#05050f 0%,#050507 60%)}
+  .sl3{background:radial-gradient(ellipse at 50% 50%,#0a0505 0%,#050507 60%)}
+  .sl4{background:radial-gradient(ellipse at 20% 80%,#07080f 0%,#050507 60%)}
+  .slide-nav{position:absolute;bottom:14px;left:50%;transform:translateX(-50%);display:flex;gap:7px;z-index:10}
+  .slide-dot{width:20px;height:2px;background:rgba(255,255,255,.18);cursor:pointer;transition:all .28s}
+  .slide-dot.active{background:var(--red);box-shadow:0 0 7px rgba(224,28,28,.55);width:34px}
+  .slide-arrow{position:absolute;top:50%;transform:translateY(-50%);background:rgba(5,5,7,.6);border:1px solid var(--border);color:var(--white);width:38px;height:38px;display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:10;font-size:1.1rem;transition:all .18s}
+  .slide-arrow:hover{background:var(--red);border-color:var(--red)}
+  .slide-arrow.prev{left:12px}.slide-arrow.next{right:12px}
+
+  /* ABOUT */
+  .about-section{padding:80px 64px;background:var(--surface);border-top:1px solid var(--border)}
+  .about-body{max-width:820px}
+  .about-body p{font-weight:300;font-size:1rem;line-height:1.8;color:#b8b8b8;margin-bottom:16px}
+  .about-body p strong{color:var(--white);font-weight:600}
+  .about-body .die-line{font-family:var(--fd);font-size:1.4rem;letter-spacing:.16em;color:var(--red);margin:20px 0 16px;text-shadow:0 0 20px rgba(224,28,28,.3)}
+  .about-body .inspo{color:#4e4e4e;font-size:.87rem;font-style:italic;margin-top:8px}
+  .about-tags{display:flex;flex-wrap:wrap;gap:7px;margin-top:28px}
+  .tag{font-family:var(--fm);font-size:.58rem;letter-spacing:.18em;text-transform:uppercase;padding:6px 14px;border:1px solid rgba(255,255,255,.14);color:rgba(240,240,240,.7)}
+
+  /* Features trigger */
+  .action-row{display:flex;align-items:center;gap:13px;margin-top:28px;flex-wrap:wrap}
+  .btn-ghost{display:inline-flex;align-items:center;gap:9px;padding:12px 24px;font-family:var(--fm);font-size:.68rem;letter-spacing:.18em;text-transform:uppercase;background:transparent;color:rgba(240,240,240,.65);border:1px solid var(--border);cursor:pointer;transition:all .2s;clip-path:polygon(0 0,calc(100% - 8px) 0,100% 8px,100% 100%,8px 100%,0 calc(100% - 8px))}
+  .btn-ghost:hover{border-color:var(--red);color:var(--white)}
+  .btn-ghost svg{width:13px;height:13px;fill:none;stroke:currentColor;stroke-width:2;transition:transform .2s}
+  .btn-ghost:hover svg{transform:rotate(45deg)}
+
+  /* PLATFORMS BAR */
+  .platforms-bar{padding:0 64px;height:58px;background:var(--bg);border-top:1px solid var(--border);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:28px}
+  .plat-label{font-family:var(--fm);font-size:.6rem;letter-spacing:.3em;color:var(--dim);text-transform:uppercase;flex-shrink:0;white-space:nowrap}
+  .plat-div{width:1px;height:26px;background:var(--border)}
+  .plat-chips{display:flex;gap:9px;flex-wrap:wrap;align-items:center}
+  .chip{font-family:var(--fm);font-size:.62rem;letter-spacing:.16em;text-transform:uppercase;padding:5px 13px;border:1px solid rgba(255,255,255,.14);color:var(--white)}
+  .plat-note{margin-left:auto;font-family:var(--fm);font-size:.55rem;letter-spacing:.12em;color:rgba(138,138,138,.5);text-align:right;white-space:nowrap}
+
+  /* KS CTA BAND */
+  .ks-band{padding:52px 64px;background:var(--surface);border-top:1px solid var(--border);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:40px;flex-wrap:wrap;position:relative;overflow:hidden}
+  .ks-band::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 20% 50%,rgba(224,28,28,.06) 0%,transparent 60%);pointer-events:none}
+  .ks-left{display:flex;align-items:center;gap:20px;position:relative;z-index:1}
+  .ks-icon{height:44px;width:44px;object-fit:contain}
+  .ks-text h3{font-family:var(--fd);font-size:1.75rem;letter-spacing:.06em;color:var(--white);line-height:1.1}
+  .ks-text p{font-family:var(--fm);font-size:.6rem;letter-spacing:.2em;color:var(--dim);margin-top:4px;text-transform:uppercase}
+  .ks-ctas{display:flex;gap:13px;flex-wrap:wrap;position:relative;z-index:1}
+
+  /* TEAM */
+  .team-section{padding:80px 64px;background:var(--bg);border-top:1px solid var(--border)}
+  .team-body{max-width:820px}
+  .team-body p{font-weight:300;font-size:1rem;line-height:1.8;color:#b0b0b0;margin-bottom:16px}
+  .team-body p strong{color:var(--white)}
+  .team-body .discord-row{margin-top:24px}
+
+  /* FOOTER */
+  footer{padding:34px 64px;background:var(--surface);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:14px;border-top:1px solid var(--border)}
+  .footer-logo{display:flex;align-items:center;gap:10px;text-decoration:none}
+  .footer-logo img{height:48px;width:48px;object-fit:contain;filter:brightness(1) invert(0);opacity:1}
+  .footer-studio{font-family:var(--fd);font-size:.9rem;letter-spacing:.1em;color:#c0c0c0}
+  .footer-links{display:flex;gap:20px;list-style:none}
+  .footer-links a{font-family:var(--fm);font-size:.56rem;letter-spacing:.2em;color:#b0b0b0;text-decoration:none;text-transform:uppercase;transition:color .18s}
+  .footer-links a:hover{color:var(--red)}
+  .footer-copy{font-family:var(--fm);font-size:.54rem;letter-spacing:.14em;color:rgba(200,200,200,.6);text-align:right}
+
+  /* MODAL SHARED */
+  .modal-overlay{position:fixed;inset:0;z-index:200;display:flex;align-items:center;justify-content:center;padding:24px;opacity:0;pointer-events:none;transition:opacity .3s}
+  .modal-overlay.open{opacity:1;pointer-events:all}
+  .modal-backdrop{position:absolute;inset:0;background:rgba(3,3,5,.9);backdrop-filter:blur(6px)}
+  .modal{position:relative;z-index:1;background:var(--surface);border:1px solid var(--border);width:100%;max-width:960px;max-height:90vh;overflow-y:auto;padding:48px;transform:translateY(20px) scale(.97);transition:transform .3s;clip-path:polygon(0 0,calc(100% - 20px) 0,100% 20px,100% 100%,20px 100%,0 calc(100% - 20px))}
+  .modal-overlay.open .modal{transform:translateY(0) scale(1)}
+  .modal-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:36px;gap:20px}
+  .modal-eyebrow{font-family:var(--fm);font-size:.6rem;letter-spacing:.36em;color:var(--red);text-transform:uppercase;margin-bottom:4px}
+  .modal-title{font-family:var(--fd);font-size:clamp(1.8rem,3vw,2.8rem);letter-spacing:.06em;color:var(--white)}
+  .modal-close{width:38px;height:38px;border:1px solid rgba(255,255,255,.15);background:transparent;color:var(--dim);font-size:1.2rem;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .18s;clip-path:polygon(0 0,calc(100% - 6px) 0,100% 6px,100% 100%,6px 100%,0 calc(100% - 6px))}
+  .modal-close:hover{border-color:var(--red);color:var(--red)}
+
+  /* Features grid (in modal) */
+  .features-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+  .fc{border:1px solid var(--border);padding:24px 20px;background:rgba(224,28,28,.02);position:relative;overflow:hidden;transition:border-color .25s,background .25s}
+  .fc:hover{border-color:rgba(224,28,28,.5);background:rgba(224,28,28,.05)}
+  .fc::after{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--red),transparent);opacity:0;transition:opacity .25s}
+  .fc:hover::after{opacity:.5}
+  .fc-icon{font-size:1.25rem;margin-bottom:10px;display:block}
+  .fc-title{font-family:var(--fd);font-size:1rem;letter-spacing:.08em;color:var(--white);margin-bottom:6px}
+  .fc-desc{font-family:var(--fb);font-weight:300;font-size:.84rem;line-height:1.65;color:#888}
+
+  /* Rewards grid (in modal) */
+  .rewards-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:13px}
+  .rc{border:1px solid rgba(255,255,255,.1);padding:20px 18px;position:relative;overflow:hidden;display:flex;flex-direction:column;gap:9px;background:rgba(255,255,255,.013);transition:border-color .25s}
+  .rc:hover{border-color:rgba(255,255,255,.25)}
+  .rc.feat{border-color:rgba(224,28,28,.45);background:rgba(224,28,28,.04)}
+  .rc.feat::before{content:'FEATURED';position:absolute;top:0;right:0;font-family:var(--fm);font-size:.5rem;letter-spacing:.22em;background:var(--red);color:#fff;padding:3px 8px}
+  .rc.feat:hover{border-color:rgba(224,28,28,.7)}
+  .rc.sold{opacity:.55;pointer-events:none;border-color:rgba(80,160,220,0.5)}
+  .rc.sold::after{content:'SOLD OUT';position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:var(--fd);font-size:1.3rem;letter-spacing:.15em;color:rgba(80,160,220,0.85);border:1px solid rgba(80,160,220,0.5)}
+  .rc-price{font-family:var(--fd);font-size:1.5rem;letter-spacing:.06em;color:var(--red);line-height:1}
+  .rc-price small{font-family:var(--fm);font-size:.57rem;color:var(--dim);vertical-align:super}
+  .rc-name{font-family:var(--fd);font-size:.9rem;letter-spacing:.1em;color:var(--white)}
+  .rc-desc{font-weight:300;font-size:.79rem;line-height:1.6;color:#7e7e7e;flex:1}
+  .rc-backers{font-family:var(--fm);font-size:.56rem;letter-spacing:.2em;color:var(--dim);text-transform:uppercase}
+  .rc-cta{display:inline-flex;align-items:center;justify-content:center;padding:9px;font-family:var(--fm);font-size:.61rem;letter-spacing:.18em;text-transform:uppercase;text-decoration:none;background:transparent;color:rgba(240,240,240,.6);border:1px solid rgba(255,255,255,.12);transition:all .2s;margin-top:auto}
+  .rc-cta:hover{background:var(--red);color:#fff;border-color:var(--red)}
+  .rc.feat .rc-cta{background:var(--red);color:#fff;border-color:var(--red)}
+  .rc.feat .rc-cta:hover{background:var(--red-glow);box-shadow:0 0 18px rgba(224,28,28,.5)}
+  .modal-ks-cta{display:flex;justify-content:center;margin-top:32px;padding-top:28px;border-top:1px solid var(--border);gap:13px;flex-wrap:wrap}
+
+  /* RESPONSIVE */
+  @media(max-width:1100px){.media-dual{grid-template-columns:1fr}.rewards-grid{grid-template-columns:repeat(2,1fr)}.features-grid{grid-template-columns:1fr 1fr}}
+  @media(max-width:900px){
+    nav{padding:14px 24px}.nav-links{display:none}
+    .hero-content{padding:0 28px 56px}
+    .media-section,.about-section,.team-section{padding:56px 24px}
+    .funded-strip,.ks-band,.platforms-bar{padding:14px 24px}
+    footer{padding:28px 24px}
+    .plat-note{display:none}
+    .modal{padding:28px 20px}
+    .features-grid{grid-template-columns:1fr}
+    .rewards-grid{grid-template-columns:1fr 1fr}
+  }
+  @media(max-width:560px){
+    .rewards-grid{grid-template-columns:1fr}
+    .hero-title{font-size:clamp(3.2rem,13vw,5rem)}
+    .funded-strip{height:auto;padding:16px 24px;flex-wrap:wrap;gap:12px}
+    .fstat{flex:none;width:calc(50% - 6px)}
+    .funded-badge{width:100%;border-left:none;border-top:1px solid var(--border);padding-top:12px}
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="nav">
+  <a href="#" class="nav-logo">
+    <img src="images/aberrant.PNG" alt="Aberrant Games"/>
+    <span class="nav-studio">Aberrant Games</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="#media">Media</a></li>
+    <li><a href="#about">About</a></li>
+    <li><a href="#team">Team</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-content">
+    <div class="hero-eyebrow">Aberrant Games · Cyberpunk Horror VR</div>
+    <div class="hero-vr-badge"><i></i>PC VR &amp; PlayStation VR2 Exclusive</div>
+    <img src="images/logo.png" alt="ORDER // ONE" style="width:clamp(320px,55vw,700px);height:auto;margin-bottom:8px;padding-left:40px;margin-left:-40px;filter:drop-shadow(0 0 40px rgba(224,28,28,0.35));display:block;"/>
+    <p class="hero-sub">Survive. Die. Rebuild. Descend into Order.</p>
+    <div class="hero-ctas">
+      <button onclick="openRewards()" class="btn btn-primary">
+        <img src="images/xr7jn0op-kickstarter-logo-k-green.png" alt=""/>
+        Late Pledge on Kickstarter
+      </button>
+      <a href="https://store.steampowered.com/app/4373130/ORDER__ONE" target="_blank" class="btn btn-secondary">
+        <img src="images/steam-logo-black-transparent.png" alt=""/>
+        Wishlist on Steam
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- FUNDED STRIP -->
+<div class="funded-strip">
+  <div class="fstat"><span class="fstat-num">CA$13,750</span><span class="fstat-label">Pledged</span></div>
+  <div class="fstat"><span class="fstat-num">137%</span><span class="fstat-label">Funded</span></div>
+  <div class="fstat"><span class="fstat-num">113</span><span class="fstat-label">Backers</span></div>
+  <div class="funded-badge">Successfully Funded · March 2, 2026</div>
+</div>
+
+<!-- MEDIA -->
+<section class="media-section" id="media">
+  <div class="sec-label">Trailer &amp; Screenshots</div>
+  <h2 class="sec-title">SEE IT IN ACTION</h2>
+  <div class="media-block" style="margin-bottom:20px">
+    <div class="media-block-label">Official Trailer</div>
+    <div class="trailer-wrap">
+      <iframe src="https://www.youtube-nocookie.com/embed/cP3KUB4ar2U?rel=0&modestbranding=1" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+    </div>
+  </div>
+  <div class="media-block">
+    <div class="media-block-label">Screenshots</div>
+    <div class="slideshow">
+        <div class="slides" id="slides">
+            <div class="slide"><img src="images/21_9aiupscaled4x.png" alt="ORDER // ONE" /></div>
+            <div class="slide"><img src="images/image1.jpg" alt="Screenshot 01" /></div>
+            <div class="slide"><img src="images/image2.jpg" alt="Screenshot 02" /></div>
+            <div class="slide"><img src="images/image3.jpg" alt="Screenshot 03" /></div>
+            <div class="slide"><img src="images/image4.jpg" alt="Screenshot 04" /></div>
+            <div class="slide"><img src="images/image5.jpg" alt="Screenshot 05" /></div>
+            <div class="slide"><img src="images/image6.jpg" alt="Screenshot 06" /></div>
+            <div class="slide"><img src="images/image7.jpg" alt="Screenshot 07" /></div>
+            <div class="slide"><img src="images/image8.jpg" alt="Screenshot 08" /></div>
+            <div class="slide"><img src="images/image9.jpg" alt="Screenshot 09" /></div>
+        </div>
+      <button class="slide-arrow prev" onclick="shiftSlide(-1)">&#8249;</button>
+      <button class="slide-arrow next" onclick="shiftSlide(1)">&#8250;</button>
+      <div class="slide-nav" id="slideNav"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section class="about-section" id="about">
+  <div class="sec-label">The Game</div>
+  <h2 class="sec-title" style="font-size:clamp(1.8rem,3vw,2.7rem);margin-bottom:24px;">DESCEND INTO ORDER</h2>
+  <div class="about-body">
+    <p>ORDER // ONE is a VR exclusive cyberpunk horror stealth-action roguelite: cinematic storytelling, addictive gameplay, and no hand-holding, powered by PCVR.</p>
+    <p>Trapped in a cycle of death and rebirth, you fight through a decaying space station, augmenting yourself with cybernetics and rebuilding from scratch. Rip cybernetic arms off your enemies and hot-swap them onto your own. Fight an evolving enemy that learns from your every move, adapting to your playstyle.</p>
+    <p>Scavenge blueprints and lost cyber-arms to upgrade yourself, but be wary of the enemy: sometimes it's better to sneak past them through vents, crawl spaces, or with a well-timed grapple. But if you are spotted, you must act fast. Wall-run, jump, and slide into battle, slicing your enemies to pieces.</p>
+
+    <div class="die-line">DIE. REBUILD. ADAPT.</div>
+
+    <p>You play as "ADAM", a clone worker aboard a decaying deep-space station where death is temporary. When suddenly, the station's onboard AI assistant has gone rogue, seizing the cloning facilities, and turning your shipmates into mind-controlled husks. You are among the last survivors on the rapidly decaying and failing station.</p>
+    <p>Every death is a lesson. Every return drags you deeper into the nightmare, and closer to the horrifying truth waiting at the heart of New Genesis Station.</p>
+
+    <div class="about-tags">
+      <span class="tag">VR Exclusive</span>
+      <span class="tag">Roguelite</span>
+      <span class="tag">Stealth-Action</span>
+      <span class="tag">Cyberpunk Horror</span>
+      <span class="tag">Single Player</span>
+      <span class="tag">6DOF Movement</span>
+      <span class="tag">Kickstarter Funded</span>
+      <span class="tag">PC VR · PSVR2</span>
+    </div>
+    <div class="action-row">
+      <button class="btn-ghost" onclick="openFeatures()">
+        <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        Explore Core Features
+      </button>
+    </div>
+  </div>
+</section>
+
+<!-- PLATFORMS BAR -->
+<div class="platforms-bar">
+  <span class="plat-label">Platforms</span>
+  <div class="plat-div"></div>
+  <div class="plat-chips">
+    <span class="chip">PC VR — Steam</span>
+    <span class="chip">PlayStation VR2</span>
+    <span class="chip">Steam Frame</span>
+  </div>
+  <p class="plat-note">Not standalone. Tethered PC VR &amp; PSVR2 only.</p>
+</div>
+
+<!-- KS CTA BAND -->
+<div class="ks-band" id="support">
+  <div class="ks-left">
+    <img src="images/xr7jn0op-kickstarter-logo-k-green.png" class="ks-icon" alt="Kickstarter"/>
+    <div class="ks-text">
+      <h3>BACK IT. PLAY IT EARLY.</h3>
+      <p>Secure your copy and get tester access now. Late pledges are open.</p>
+    </div>
+  </div>
+  <div class="ks-ctas">
+    <button class="btn btn-primary" onclick="openRewards()">
+      <img src="images/xr7jn0op-kickstarter-logo-k-green.png" alt=""/>
+      Late Pledge Now
+    </button>
+    <a href="https://store.steampowered.com/app/4373130/ORDER__ONE" target="_blank" class="btn btn-secondary">
+      <img src="images/steam-logo-black-transparent.png" alt=""/>
+      Wishlist on Steam
+    </a>
+  </div>
+</div>
+
+<!-- TEAM -->
+<section class="team-section" id="team">
+  <div class="sec-label">The Developers</div>
+  <h2 class="sec-title" style="font-size:clamp(1.8rem,3vw,2.7rem);margin-bottom:24px;">WHO ARE WE?</h2>
+  <div class="team-body">
+    <p>We are a team of 7 VR developers with 15 years of combined experience. With countless hours of community testing and feedback, we mastered fluid, thrilling, and intuitive VR mechanics that players loved.</p>
+    <p>Our focus has always been on groundbreaking gameplay. We develop in the open, with a thriving Discord community where player feedback directly shapes the game. Meaning we are making the game with you.</p>
+    <p>So back us now, and get immediate access to our tester channels, giving you early looks, and game builds!</p>
+    <div class="discord-row">
+      <a href="https://discord.gg/xEds6hVeT8" target="_blank" class="btn btn-secondary" style="clip-path:none;border-color:var(--border);">Join the Discord</a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <a href="#" class="footer-logo">
+    <img src="images/aberrant.PNG" alt="Aberrant Games"/>
+    <span class="footer-studio">Aberrant Games</span>
+  </a>
+  <ul class="footer-links">
+    <li><a href="https://discord.gg/xEds6hVeT8" target="_blank">Discord</a></li>
+    <li><a href="https://store.steampowered.com/app/4373130/ORDER__ONE" target="_blank">Steam</a></li>
+    <li><a href="https://www.kickstarter.com/projects/aberrantgames/order-one" target="_blank">Kickstarter</a></li>
+    <li><a href="https://drive.google.com/drive/folders/1ConNSuW03bQrIj8M0TGfeZpvY6zmyA8A?usp=sharing" target="_blank">Press Kit</a></li>
+    <li><a href="mailto:contact@aberrantgamestudio.com">Contact</a></li>
+  </ul>
+  <div class="footer-copy">© 2026 Aberrant Games. All rights reserved.</div>
+</footer>
+
+<!-- FEATURES MODAL -->
+<div class="modal-overlay" id="featuresModal" onclick="handleClick(event,'featuresModal')">
+  <div class="modal-backdrop"></div>
+  <div class="modal">
+    <div class="modal-header">
+      <div>
+        <div class="modal-eyebrow">Gameplay</div>
+        <div class="modal-title">CORE FEATURES</div>
+      </div>
+      <button class="modal-close" onclick="closeModal('featuresModal')">✕</button>
+    </div>
+    <div class="features-grid">
+      <div class="fc">
+        
+        <div class="fc-title">Modular Cybernetic Arms</div>
+        <p class="fc-desc">Physically tear cybernetic arms off enemies and hot-swap them in real-time. Sword-Arms, Gun-Arms, Grapple-Hooks, Kinetic-Fists — build your loadout from the battlefield itself.</p>
+      </div>
+      <div class="fc">
+        
+        <div class="fc-title">True Roguelite Loop</div>
+        <p class="fc-desc">Die, and your consciousness transfers to a cloned body. Your old corpse and all your gear stays exactly where you fell. Fight back to retrieve it, or forge a new path.</p>
+      </div>
+      <div class="fc">
+        
+        <div class="fc-title">Adaptive AI Enemy</div>
+        <p class="fc-desc">The station learns. Patrol routes shift, your tactics get countered, enemies return upgraded. Every run is a fresh threat shaped entirely by how you play.</p>
+      </div>
+      <div class="fc">
+        
+        <div class="fc-title">Full 6DOF Freedom</div>
+        <p class="fc-desc">Wall-run, slide, flip, roll, and grapple through the station. Designed for players who want a real skill ceiling, not comfort mode.</p>
+      </div>
+      <div class="fc">
+        
+        <div class="fc-title">Claustrophobic World</div>
+        <p class="fc-desc">A semi-open space station drenched in cassette-futurism aesthetics. Flickering lights, narrow vents, hull breaches — stealth and combat are both viable paths.</p>
+      </div>
+      <div class="fc">
+        
+        <div class="fc-title">Haunting Narrative</div>
+        <p class="fc-desc">Why did the AI turn? What is it building from your crewmates? Multiple endings based on your discoveries, a mystery that deepens with every run.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- REWARDS MODAL -->
+<div class="modal-overlay" id="rewardsModal" onclick="handleClick(event,'rewardsModal')">
+  <div class="modal-backdrop"></div>
+  <div class="modal" style="max-width:1100px">
+    <div class="modal-header">
+      <div>
+        <div class="modal-eyebrow">Kickstarter</div>
+        <div class="modal-title">BACKER REWARDS</div>
+      </div>
+      <button class="modal-close" onclick="closeModal('rewardsModal')">✕</button>
+    </div>
+    <div class="rewards-grid">
+      <div class="rc">
+        <div class="rc-price"><small>CA$</small>14</div>
+        <div class="rc-name">Discord Tester Access</div>
+        <p class="rc-desc">Permanent Tester role, private early-access channel, free access to previous VR games, and your name in the credits.</p>
+        <div class="rc-backers">4 Backers</div>
+        <a href="https://www.kickstarter.com/projects/aberrantgames/order-one/rewards#reward-UmV3YXJkLVVtVjNZWEprTFRFd09EZ3pPRFU0" target="_blank" class="rc-cta">Late Pledge →</a>
+      </div>
+      <div class="rc feat">
+        <div class="rc-price"><small>CA$</small>30</div>
+        <div class="rc-name">Early Backer / Preorder</div>
+        <p class="rc-desc">One copy of ORDER // ONE, permanent Discord Tester Access, and your name in the credits.</p>
+        <div class="rc-backers">57 Backers</div>
+        <a href="https://www.kickstarter.com/projects/aberrantgames/order-one/rewards#reward-UmV3YXJkLVVtVjNZWEprTFRFd09EZ3pPRFl4" target="_blank" class="rc-cta">Late Pledge →</a>
+      </div>
+      <div class="rc">
+        <div class="rc-price"><small>CA$</small>45</div>
+        <div class="rc-name">Digital Deluxe Edition</div>
+        <p class="rc-desc">All previous rewards, plus the official soundtrack and digital concept art as a downloadable add-on.</p>
+        <div class="rc-backers">11 Backers</div>
+        <a href="https://www.kickstarter.com/projects/aberrantgames/order-one/rewards#reward-UmV3YXJkLVVtVjNZWEprTFRFd09EZ3pPVEUw" target="_blank" class="rc-cta">Late Pledge →</a>
+      </div>
+      <div class="rc">
+        <div class="rc-price"><small>CA$</small>335</div>
+        <div class="rc-name">Collector's Edition Bundle</div>
+        <p class="rc-desc">Premium physical box, 3D-printed Cybernetic Arm, pins &amp; stickers, signed card, and a physical USB edition. Ships worldwide.</p>
+        <div class="rc-backers">4 Backers · Ships Worldwide</div>
+        <a href="https://www.kickstarter.com/projects/aberrantgames/order-one/rewards#reward-UmV3YXJkLVVtVjNZWEprTFRFd09EZ3pPRGs1" target="_blank" class="rc-cta">Late Pledge →</a>
+      </div>
+      <div class="rc">
+        <div class="rc-price"><small>CA$</small>550</div>
+        <div class="rc-name">Executive Supporter</div>
+        <p class="rc-desc">Your facial likeness scanned onto an in-game NPC. Includes all previous rewards + Collector's Edition. 5 of 10 remaining.</p>
+        <div class="rc-backers">5 Backers · 5 Left</div>
+        <a href="https://www.kickstarter.com/projects/aberrantgames/order-one/rewards#reward-UmV3YXJkLVVtVjNZWEprTFRFd09EZ3pPVEF3" target="_blank" class="rc-cta">Late Pledge →</a>
+      </div>
+      <div class="rc sold">
+        <div class="rc-price"><small>CA$</small>65</div>
+        <div class="rc-name">Digital Founder's Pack</div>
+        <p class="rc-desc">All previous rewards, a free copy of ORDER // ZERO on release, and an exclusive Founder's Sword-Arm Cybernetic skin.</p>
+        <div class="rc-backers">18 Backers · 0 Remaining</div>
+        <a href="#" class="rc-cta">Sold Out</a>
+      </div>
+      <div class="rc sold">
+        <div class="rc-price"><small>CA$</small>125</div>
+        <div class="rc-name">Leave Your Mark</div>
+        <p class="rc-desc">All previous rewards, plus a hidden data log written around your final moments — customize the name and cause of death.</p>
+        <div class="rc-backers">8 Backers · 0 Remaining</div>
+        <a href="#" class="rc-cta">Sold Out</a>
+      </div>
+      <div class="rc sold">
+        <div class="rc-price"><small>CA$</small>1,000</div>
+        <div class="rc-name">Ultra Executive Producer</div>
+        <p class="rc-desc">Become a full fledged character in ORDER // ONE. Record voice lines for an in-game NPC and have your likeness appear as that character. Includes all previous rewards, including the Collector's Edition.</p>
+        <div class="rc-backers">1 Backer · 0 Remaining</div>
+        <a href="#" class="rc-cta">Sold Out</a>
+      </div>
+      <div class="rc sold">
+        <div class="rc-price"><small>CA$</small>3,548</div>
+        <div class="rc-name">Legendary Executive Producer</div>
+        <p class="rc-desc">Multiple characters, Easter eggs, voice lines, and direct creative involvement in your in-game representation.</p>
+        <div class="rc-backers">1 Backer · 0 Remaining</div>
+        <a href="#" class="rc-cta">Sold Out</a>
+      </div>
+    </div>
+    <div class="modal-ks-cta">
+      <a href="https://www.kickstarter.com/projects/aberrantgames/order-one/rewards" target="_blank" class="btn btn-primary">
+        <img src="images/xr7jn0op-kickstarter-logo-k-green.png" alt=""/>
+        Late Pledge on Kickstarter
+      </a>
+      <a href="https://store.steampowered.com/app/4373130/ORDER__ONE" target="_blank" class="btn btn-secondary">
+        <img src="images/steam-logo-black-transparent.png" alt=""/>
+        Wishlist on Steam
+      </a>
+    </div>
+  </div>
+</div>
+
+<script>
+  // SLIDESHOW
+  let cur=0;
+  const slidesEl=document.getElementById('slides');
+  const navEl=document.getElementById('slideNav');
+  const total=document.querySelectorAll('.slide').length;
+  for(let i=0;i<total;i++){
+    const d=document.createElement('div');
+    d.className='slide-dot'+(i===0?' active':'');
+    d.onclick=()=>goTo(i);
+    navEl.appendChild(d);
+  }
+  function goTo(n){cur=(n+total)%total;slidesEl.style.transform=`translateX(-${cur*100}%)`;document.querySelectorAll('.slide-dot').forEach((d,i)=>d.classList.toggle('active',i===cur));}
+  function shiftSlide(d){goTo(cur+d);}
+  setInterval(()=>shiftSlide(1),5500);
+
+  // NAV
+  const nav=document.getElementById('nav');
+  let lastY=0;
+  window.addEventListener('scroll',()=>{
+    const y=window.scrollY,hide=y>lastY&&y>80;
+    nav.style.opacity=hide?'0':'1';
+    nav.style.transform=hide?'translateY(-100%)':'translateY(0)';
+    lastY=y;
+  });
+
+  // MODALS
+  function openModal(id){document.getElementById(id).classList.add('open');document.body.style.overflow='hidden';}
+  function closeModal(id){document.getElementById(id).classList.remove('open');document.body.style.overflow='';}
+  function handleClick(e,id){if(e.target===document.getElementById(id)||e.target.classList.contains('modal-backdrop'))closeModal(id);}
+  function openFeatures(){openModal('featuresModal');}
+  function openRewards(){openModal('rewardsModal');}
+  document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeModal('featuresModal');closeModal('rewardsModal');}});
+</script>
+</body>
+</html>
