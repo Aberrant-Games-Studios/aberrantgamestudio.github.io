@@ -111,12 +111,12 @@
   .btn-ghost:hover svg{transform:rotate(45deg)}
 
   /* PLATFORMS BAR */
-  .platforms-bar{padding:0 64px;height:58px;background:var(--bg);border-top:1px solid var(--border);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:28px}
+  .platforms-bar{padding:12px 64px;min-height:58px;height:auto;background:var(--bg);border-top:1px solid var(--border);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:16px;flex-wrap:wrap}
   .plat-label{font-family:var(--fm);font-size:.6rem;letter-spacing:.3em;color:var(--dim);text-transform:uppercase;flex-shrink:0;white-space:nowrap}
-  .plat-div{width:1px;height:26px;background:var(--border)}
-  .plat-chips{display:flex;gap:9px;flex-wrap:wrap;align-items:center}
+  .plat-div{width:1px;height:26px;background:var(--border);flex-shrink:0}
+  .plat-chips{display:flex;gap:9px;flex-wrap:wrap;align-items:center;flex:1;min-width:0}
   .chip{font-family:var(--fm);font-size:.62rem;letter-spacing:.16em;text-transform:uppercase;padding:5px 13px;border:1px solid rgba(255,255,255,.14);color:var(--white)}
-  .plat-note{margin-left:auto;font-family:var(--fm);font-size:.55rem;letter-spacing:.12em;color:rgba(138,138,138,.5);text-align:right;white-space:nowrap}
+  .plat-note{font-family:var(--fm);font-size:.55rem;letter-spacing:.12em;color:rgba(138,138,138,.5);white-space:nowrap}
 
   /* KS CTA BAND */
   .ks-band{padding:52px 64px;background:var(--surface);border-top:1px solid var(--border);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:40px;flex-wrap:wrap;position:relative;overflow:hidden}
@@ -195,6 +195,7 @@
     .funded-strip,.ks-band,.platforms-bar{padding:14px 24px}
     footer{padding:28px 24px}
     .plat-note{display:none}
+    .plat-div{display:none}
     .modal{padding:28px 20px}
     .features-grid{grid-template-columns:1fr}
     .rewards-grid{grid-template-columns:1fr 1fr}
@@ -229,8 +230,8 @@
   <div class="hero-content">
     <div class="hero-eyebrow">Aberrant Games · Cyberpunk Horror VR</div>
     <div class="hero-vr-badge"><i></i>PC VR &amp; PlayStation VR2 Exclusive</div>
-    <img src="images/logo.png" alt="ORDER // ONE" style="width:clamp(320px,55vw,700px);height:auto;margin-bottom:8px;padding-left:40px;margin-left:-40px;filter:drop-shadow(0 0 40px rgba(224,28,28,0.35));display:block;"/>
-    <p class="hero-sub">Survive. Die. Rebuild. Descend into Order.</p>
+    <img src="images/logo.png" alt="ORDER // ONE" fetchpriority="high" loading="eager" decoding="sync" style="width:clamp(320px,55vw,700px);height:auto;margin-bottom:8px;padding-left:40px;margin-left:-40px;filter:drop-shadow(0 0 40px rgba(224,28,28,0.35));display:block;"/>
+    <p class="hero-sub">Die. Rebuild. Adapt. Descend into Order.</p>
     <div class="hero-ctas">
       <button onclick="openRewards()" class="btn btn-primary">
         <img src="images/xr7jn0op-kickstarter-logo-k-green.png" alt=""/>
@@ -257,7 +258,7 @@
   <div class="sec-label">Trailer &amp; Screenshots</div>
   <h2 class="sec-title">SEE IT IN ACTION</h2>
   <div class="media-block" style="margin-bottom:20px">
-    <div class="media-block-label">Official Trailer</div>
+    <div class="media-block-label">Reveal Trailer</div>
     <div class="trailer-wrap">
       <iframe src="https://www.youtube-nocookie.com/embed/cP3KUB4ar2U?rel=0&modestbranding=1" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
     </div>
@@ -375,9 +376,9 @@
     <li><a href="https://store.steampowered.com/app/4373130/ORDER__ONE" target="_blank">Steam</a></li>
     <li><a href="https://www.kickstarter.com/projects/aberrantgames/order-one" target="_blank">Kickstarter</a></li>
     <li><a href="https://drive.google.com/drive/folders/1ConNSuW03bQrIj8M0TGfeZpvY6zmyA8A?usp=sharing" target="_blank">Press Kit</a></li>
-    <li><a href="mailto:contact@aberrantgamestudio.com">Contact</a></li>
+    <li><a href="/cdn-cgi/l/email-protection#3c5f5352485d5f487c5d5e594e4e5d52485b5d51594f4849585553125f5351">Contact</a></li>
   </ul>
-  <div class="footer-copy">© 2026 Aberrant Games. All rights reserved.</div>
+  <div class="footer-copy">© 2026 Aberrant Games Inc. All rights reserved.</div>
 </footer>
 
 <!-- FEATURES MODAL -->
@@ -531,6 +532,18 @@
   function shiftSlide(d){goTo(cur+d);}
   setInterval(()=>shiftSlide(1),5500);
 
+  // TOUCH SWIPE for slideshow
+  (function(){
+    const sw=document.querySelector('.slideshow');
+    let tx=0,ty=0;
+    sw.addEventListener('touchstart',e=>{tx=e.touches[0].clientX;ty=e.touches[0].clientY;},{passive:true});
+    sw.addEventListener('touchend',e=>{
+      const dx=e.changedTouches[0].clientX-tx;
+      const dy=e.changedTouches[0].clientY-ty;
+      if(Math.abs(dx)>Math.abs(dy)&&Math.abs(dx)>30){shiftSlide(dx<0?1:-1);}
+    },{passive:true});
+  })();
+
   // NAV
   const nav=document.getElementById('nav');
   let lastY=0;
@@ -547,7 +560,4 @@
   function handleClick(e,id){if(e.target===document.getElementById(id)||e.target.classList.contains('modal-backdrop'))closeModal(id);}
   function openFeatures(){openModal('featuresModal');}
   function openRewards(){openModal('rewardsModal');}
-  document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeModal('featuresModal');closeModal('rewardsModal');}});
 </script>
-</body>
-</html>
