@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title id="page-title">Updates — ORDER // ONE · Aberrant Games</title>
+
+<!-- Open Graph / Discord — dynamically updated per post via JS -->
+<meta property="og:type" content="article"/>
+<meta property="og:site_name" content="Aberrant Games"/>
+<meta id="og-url"         property="og:url"         content="https://www.aberrantgamestudio.com/news.html"/>
+<meta id="og-title"       property="og:title"        content="Updates — ORDER // ONE · Aberrant Games"/>
+<meta id="og-description" property="og:description"  content="Dev logs, announcements, and updates from Aberrant Games."/>
+<meta id="og-image"       property="og:image"         content="https://www.aberrantgamestudio.com/images/21_9aiupscaled4x.png"/>
+<meta property="og:image:width"  content="1200"/>
+<meta property="og:image:height" content="630"/>
+
+<!-- Twitter / X Card -->
+<meta name="twitter:card" content="summary_large_image"/>
+<meta id="tw-title"       name="twitter:title"       content="Updates — ORDER // ONE · Aberrant Games"/>
+<meta id="tw-description" name="twitter:description"  content="Dev logs, announcements, and updates from Aberrant Games."/>
+<meta id="tw-image"       name="twitter:image"        content="https://www.aberrantgamestudio.com/images/21_9aiupscaled4x.png"/>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Share+Tech+Mono&family=Barlow:ital,wght@0,300;0,400;0,600;1,300&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --red:#e01c1c;--red-glow:#ff2a2a;--white:#f0f0f0;--dim:#7a7a7a;
+    --bg:#050507;--surface:#0c0c10;--border:rgba(224,28,28,0.22);--green:#1db954;
+    --fd:'Bebas Neue',sans-serif;--fm:'Share Tech Mono',monospace;--fb:'Barlow',sans-serif;
+  }
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{background:var(--bg);color:var(--white);font-family:var(--fb);overflow-x:hidden;cursor:crosshair}
+  body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:9998;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.05) 2px,rgba(0,0,0,0.05) 4px)}
+  ::-webkit-scrollbar{width:3px}::-webkit-scrollbar-track{background:var(--bg)}::-webkit-scrollbar-thumb{background:var(--red)}
+
+  /* NAV */
+  nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:16px 56px;background:linear-gradient(to bottom,rgba(5,5,7,.97) 60%,transparent);transition:opacity .35s,transform .35s}
+  .nav-logo{display:flex;align-items:center;gap:11px;text-decoration:none}
+  .nav-logo img{height:44px;width:44px;object-fit:contain}
+  .nav-studio{font-family:var(--fd);font-size:1rem;letter-spacing:.12em;color:var(--white)}
+  .nav-links{display:flex;gap:32px;list-style:none}
+  .nav-links a{font-family:var(--fm);font-size:.66rem;letter-spacing:.22em;color:var(--dim);text-decoration:none;text-transform:uppercase;transition:color .18s}
+  .nav-links a:hover,.nav-links a.active{color:var(--red)}
+
+  /* PAGE HEADER */
+  .page-header{padding:120px 64px 56px;border-bottom:1px solid var(--border);position:relative;overflow:hidden}
+  .page-header::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 15% 60%,rgba(224,28,28,.07) 0%,transparent 65%);pointer-events:none}
+  .page-eyebrow{font-family:var(--fm);font-size:.6rem;letter-spacing:.38em;color:var(--red);text-transform:uppercase;margin-bottom:10px;display:flex;align-items:center;gap:10px}
+  .page-eyebrow::before{content:'';width:24px;height:1px;background:var(--red)}
+  .page-title{font-family:var(--fd);font-size:clamp(3rem,6vw,6rem);line-height:.9;letter-spacing:.04em;color:var(--white)}
+  .page-title .sl{color:var(--red);text-shadow:0 0 40px rgba(224,28,28,.7)}
+  .page-sub{font-family:var(--fb);font-weight:300;font-style:italic;font-size:1rem;color:var(--dim);margin-top:14px;letter-spacing:.04em}
+
+  /* NEWSLETTER BAND */
+  .nl-band{padding:36px 64px;background:var(--surface);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:32px;flex-wrap:wrap;position:relative;overflow:hidden}
+  .nl-band::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 80% 50%,rgba(224,28,28,.05) 0%,transparent 60%);pointer-events:none}
+  .nl-left{position:relative;z-index:1}
+  .nl-label{font-family:var(--fm);font-size:.58rem;letter-spacing:.32em;color:var(--red);text-transform:uppercase;margin-bottom:4px}
+  .nl-heading{font-family:var(--fd);font-size:1.5rem;letter-spacing:.07em;color:var(--white)}
+  .nl-sub{font-family:var(--fm);font-size:.58rem;letter-spacing:.14em;color:var(--dim);margin-top:3px;text-transform:uppercase}
+  .nl-form{display:flex;gap:0;position:relative;z-index:1}
+  .nl-input{background:rgba(255,255,255,.04);border:1px solid var(--border);border-right:none;color:var(--white);font-family:var(--fm);font-size:.68rem;letter-spacing:.12em;padding:13px 20px;width:280px;outline:none;transition:border-color .2s;clip-path:polygon(0 0,calc(100% - 0px) 0,100% 0,100% 100%,0 100%,0 0)}
+  .nl-input::placeholder{color:var(--dim)}
+  .nl-input:focus{border-color:rgba(224,28,28,.5)}
+  .nl-btn{background:var(--red);border:1px solid var(--red);color:#fff;font-family:var(--fm);font-size:.66rem;letter-spacing:.2em;text-transform:uppercase;padding:13px 22px;cursor:pointer;transition:all .2s;white-space:nowrap;clip-path:polygon(0 0,calc(100% - 8px) 0,100% 8px,100% 100%,8px 100%,0 calc(100% - 8px))}
+  .nl-btn:hover{background:var(--red-glow);box-shadow:0 0 20px rgba(224,28,28,.5)}
+  .nl-msg{font-family:var(--fm);font-size:.62rem;letter-spacing:.16em;margin-top:8px;min-height:16px;text-transform:uppercase}
+  .nl-msg.ok{color:var(--green)}.nl-msg.err{color:var(--red)}
+
+  /* POSTS FEED */
+  .posts-feed{max-width:960px;margin:0 auto;padding:64px 64px 80px}
+
+  /* POST ITEM */
+  .post-item{border:1px solid var(--border);margin-bottom:12px;transition:border-color .2s;position:relative;overflow:hidden}
+  .post-item.expanded{border-color:rgba(224,28,28,.45)}
+  .post-item::before{content:'';position:absolute;left:0;top:0;bottom:0;width:2px;background:var(--red);opacity:0;transition:opacity .2s}
+  .post-item.expanded::before{opacity:1}
+
+  /* POST HEADER — always visible */
+  .post-header{display:flex;align-items:flex-start;gap:20px;padding:24px 28px;cursor:pointer;user-select:none;transition:background .18s}
+  .post-header:hover{background:rgba(224,28,28,.03)}
+  .post-meta{flex:1;min-width:0}
+  .post-top{display:flex;align-items:center;gap:12px;margin-bottom:8px;flex-wrap:wrap}
+  .post-tag{font-family:var(--fm);font-size:.52rem;letter-spacing:.24em;text-transform:uppercase;padding:3px 10px;border:1px solid var(--border);color:var(--red)}
+  .post-tag.announcement{border-color:rgba(224,28,28,.5);background:rgba(224,28,28,.07)}
+  .post-tag.dev-log{border-color:rgba(255,255,255,.15);color:var(--dim)}
+  .post-tag.update{border-color:rgba(255,255,255,.15);color:var(--dim)}
+  .post-date{font-family:var(--fm);font-size:.55rem;letter-spacing:.2em;color:var(--dim);text-transform:uppercase}
+  .post-title{font-family:var(--fd);font-size:clamp(1.2rem,2.2vw,1.7rem);letter-spacing:.06em;color:var(--white);line-height:1.1;margin-bottom:8px;transition:color .18s}
+  .post-item.expanded .post-title{color:var(--white)}
+  .post-header:hover .post-title{color:var(--red)}
+  .post-blurb{font-weight:300;font-size:.9rem;line-height:1.65;color:#888;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+  .post-item.expanded .post-blurb{display:none}
+
+  /* TOGGLE ICON */
+  .post-toggle{flex-shrink:0;width:36px;height:36px;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;margin-top:2px;transition:all .2s}
+  .post-item.expanded .post-toggle{border-color:rgba(224,28,28,.5);background:rgba(224,28,28,.08)}
+  .post-toggle svg{width:14px;height:14px;fill:none;stroke:var(--dim);stroke-width:2;transition:transform .3s,stroke .2s}
+  .post-item.expanded .post-toggle svg{transform:rotate(45deg);stroke:var(--red)}
+
+  /* SHARE BUTTON */
+  .post-share{position:absolute;top:24px;right:72px;font-family:var(--fm);font-size:.52rem;letter-spacing:.2em;text-transform:uppercase;color:var(--dim);background:transparent;border:1px solid transparent;padding:6px 12px;cursor:pointer;transition:all .18s;opacity:0;pointer-events:none}
+  .post-item.expanded .post-share{opacity:1;pointer-events:all}
+  .post-share:hover{border-color:var(--border);color:var(--white)}
+  .post-share.copied{color:var(--green);border-color:rgba(29,185,84,.4)}
+
+  /* POST BODY — shown when expanded */
+  .post-body{max-height:0;overflow:hidden;transition:max-height .5s cubic-bezier(.77,0,.18,1)}
+  .post-item.expanded .post-body{max-height:4000px}
+  .post-body-inner{padding:0 28px 36px;border-top:1px solid var(--border)}
+
+  /* HERO IMAGE */
+  .post-hero-img{width:100%;aspect-ratio:16/9;object-fit:cover;display:block;margin-bottom:32px;margin-top:28px;filter:brightness(.92)}
+
+  /* BODY TYPOGRAPHY */
+  .post-body-inner p{font-weight:300;font-size:1rem;line-height:1.85;color:#b0b0b0;margin-bottom:18px}
+  .post-body-inner p strong{color:var(--white);font-weight:600}
+  .post-body-inner h3{font-family:var(--fd);font-size:1.3rem;letter-spacing:.1em;color:var(--red);margin:32px 0 12px;text-transform:uppercase}
+  .post-body-inner em{font-style:italic;color:#888}
+  .post-body-inner img{width:100%;margin:24px 0;display:block}
+  .post-body-inner ul,.post-body-inner ol{padding-left:20px;margin-bottom:18px}
+  .post-body-inner li{font-weight:300;font-size:.95rem;line-height:1.75;color:#b0b0b0;margin-bottom:6px}
+
+  /* BACK LINK */
+  .back-row{padding:0 64px 0;max-width:960px;margin:0 auto}
+
+  /* EMPTY STATE */
+  .empty-state{text-align:center;padding:80px 0;font-family:var(--fm);font-size:.66rem;letter-spacing:.26em;color:var(--dim);text-transform:uppercase}
+
+  /* FOOTER */
+  footer{padding:34px 64px;background:var(--surface);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:14px;border-top:1px solid var(--border)}
+  .footer-logo{display:flex;align-items:center;gap:10px;text-decoration:none}
+  .footer-logo img{height:48px;width:48px;object-fit:contain;opacity:1}
+  .footer-studio{font-family:var(--fd);font-size:.9rem;letter-spacing:.1em;color:#c0c0c0}
+  .footer-links{display:flex;gap:20px;list-style:none}
+  .footer-links a{font-family:var(--fm);font-size:.56rem;letter-spacing:.2em;color:#b0b0b0;text-decoration:none;text-transform:uppercase;transition:color .18s}
+  .footer-links a:hover{color:var(--red)}
+  .footer-copy{font-family:var(--fm);font-size:.54rem;letter-spacing:.14em;color:rgba(200,200,200,.6);text-align:right}
+
+  /* RESPONSIVE */
+  @media(max-width:900px){
+    nav{padding:14px 24px}.nav-links{display:none}
+    .page-header{padding:100px 24px 40px}
+    .nl-band{padding:28px 24px}
+    .nl-input{width:200px}
+    .posts-feed{padding:40px 24px 60px}
+    .back-row{padding:0 24px}
+    .post-header{padding:18px 20px}
+    .post-body-inner{padding:0 20px 28px}
+    .post-share{right:62px}
+    footer{padding:28px 24px}
+  }
+  @media(max-width:560px){
+    .nl-form{flex-direction:column}
+    .nl-input{width:100%;border-right:1px solid var(--border)}
+    .nl-btn{clip-path:none}
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="nav">
+  <a href="index.html" class="nav-logo">
+    <img src="images/aberrant.PNG" alt="Aberrant Games"/>
+    <span class="nav-studio">Aberrant Games</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="index.html#media">Media</a></li>
+    <li><a href="index.html#about">About</a></li>
+    <li><a href="index.html#team">Team</a></li>
+    <li><a href="news.html" class="active">Updates</a></li>
+  </ul>
+</nav>
+
+<!-- PAGE HEADER -->
+<div class="page-header">
+  <div class="page-eyebrow">Aberrant Games · Dev Updates</div>
+  <h1 class="page-title">DISPATCH<span class="sl">//</span>LOG</h1>
+  <p class="page-sub">Dev logs, announcements, and everything in between.</p>
+</div>
+
+<!-- POSTS FEED -->
+<div class="posts-feed" id="postsFeed">
+  <!-- Populated by JS from news.json -->
+  <div class="empty-state" id="loadingState">Loading updates...</div>
+</div>
+
+<!-- NEWSLETTER BAND -->
+<div class="nl-band ml-subscribe-form ml-subscribe-form-38951445">
+  <div class="nl-left">
+    <div class="nl-label">Stay in the Loop</div>
+    <div class="nl-heading">GET UPDATES IN YOUR INBOX</div>
+  </div>
+  <div style="position:relative;z-index:1">
+    <form class="ml-block-form row-form" action="https://assets.mailerlite.com/jsonp/2074926/forms/182888212268582099/subscribe" method="post" target="_blank">
+      <div class="nl-form">
+        <input class="nl-input" type="email" name="fields[email]" placeholder="your@email.com" autocomplete="email"/>
+        <button class="nl-btn" type="submit">Subscribe</button>
+      </div>
+      <input type="hidden" name="ml-submit" value="1"/>
+      <input type="hidden" name="anticsrf" value="true"/>
+    </form>
+    <div class="nl-msg row-success" style="display:none">Thank you! You've signed up for the newsletter!</div>
+  </div>
+</div>
+<script>
+  (function(){
+    const form = document.querySelector('.ml-subscribe-form-38951445 .ml-block-form');
+    const success = document.querySelector('.ml-subscribe-form-38951445 .row-success');
+    if(!form) return;
+    form.addEventListener('submit', async function(e){
+      e.preventDefault();
+      const data = new FormData(form);
+      const params = new URLSearchParams(data).toString();
+      try {
+        await fetch(form.action + '?' + params, { method: 'GET', mode: 'no-cors' });
+      } catch(err) {}
+      form.style.display = 'none';
+      success.style.display = 'block';
+    });
+  })();
+</script>
+
+<!-- FOOTER -->
+<footer>
+  <a href="index.html" class="footer-logo">
+    <img src="images/aberrant.PNG" alt="Aberrant Games"/>
+    <span class="footer-studio">Aberrant Games</span>
+  </a>
+  <ul class="footer-links">
+    <li><a href="https://discord.gg/xEds6hVeT8" target="_blank">Discord</a></li>
+    <li><a href="https://store.steampowered.com/app/4373130/ORDER__ONE" target="_blank">Steam</a></li>
+    <li><a href="https://www.kickstarter.com/projects/aberrantgames/order-one" target="_blank">Kickstarter</a></li>
+    <li><a href="https://drive.google.com/drive/folders/1ConNSuW03bQrIj8M0TGfeZpvY6zmyA8A?usp=sharing" target="_blank">Press Kit</a></li>
+  </ul>
+  <div class="footer-copy">© 2026 Aberrant Games Inc. All rights reserved.</div>
+</footer>
+
+<script>
+  const BASE_URL = 'https://www.aberrantgamestudio.com';
+
+  // ─── NAV HIDE ON SCROLL ───────────────────────────────────────────────────
+  const navEl = document.getElementById('nav');
+  let lastY = 0;
+  window.addEventListener('scroll', () => {
+    const y = window.scrollY, hide = y > lastY && y > 80;
+    navEl.style.opacity = hide ? '0' : '1';
+    navEl.style.transform = hide ? 'translateY(-100%)' : 'translateY(0)';
+    lastY = y;
+  });
+
+  // ─── RENDER POSTS ─────────────────────────────────────────────────────────
+  function tagClass(tag) {
+    if (!tag) return '';
+    const t = tag.toLowerCase();
+    if (t.includes('announce')) return 'announcement';
+    if (t.includes('dev') || t.includes('log')) return 'dev-log';
+    return 'update';
+  }
+
+  function formatDate(str) {
+    const d = new Date(str + 'T00:00:00');
+    return d.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+  }
+
+  function buildPost(post, index) {
+    const item = document.createElement('div');
+    item.className = 'post-item';
+    item.id = `post-${post.id}`;
+    item.dataset.id = post.id;
+    item.dataset.index = index;
+
+    const heroImg = post.image
+      ? `<img class="post-hero-img" src="${post.image}" alt="${post.title}" loading="lazy"/>`
+      : '';
+
+    item.innerHTML = `
+      <button class="post-share" title="Copy link to this post" aria-label="Copy link">⊡ Copy Link</button>
+      <div class="post-header" role="button" tabindex="0" aria-expanded="false">
+        <div class="post-meta">
+          <div class="post-top">
+            <span class="post-tag ${tagClass(post.tag)}">${post.tag || 'Update'}</span>
+            <span class="post-date">${formatDate(post.date)}</span>
+          </div>
+          <div class="post-title">${post.title}</div>
+          <div class="post-blurb">${post.blurb}</div>
+        </div>
+        <div class="post-toggle">
+          <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        </div>
+      </div>
+      <div class="post-body">
+        <div class="post-body-inner">
+          ${heroImg}
+          ${post.body || ''}
+        </div>
+      </div>
+    `;
+
+    // Toggle expand/collapse
+    const header = item.querySelector('.post-header');
+    header.addEventListener('click', () => togglePost(post.id));
+    header.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') togglePost(post.id); });
+
+    // Share / copy link button
+    const shareBtn = item.querySelector('.post-share');
+    shareBtn.addEventListener('click', e => {
+      e.stopPropagation();
+      const url = `${BASE_URL}/news.html#${post.id}`;
+      navigator.clipboard.writeText(url).then(() => {
+        shareBtn.textContent = '✓ Copied';
+        shareBtn.classList.add('copied');
+        setTimeout(() => {
+          shareBtn.textContent = '⊡ Copy Link';
+          shareBtn.classList.remove('copied');
+        }, 2000);
+      });
+    });
+
+    return item;
+  }
+
+  // ─── TOGGLE POST ──────────────────────────────────────────────────────────
+  function togglePost(id, skipHistory = false) {
+    const target = document.getElementById(`post-${id}`);
+    if (!target) return;
+    const isOpen = target.classList.contains('expanded');
+
+    // Collapse all
+    document.querySelectorAll('.post-item.expanded').forEach(el => {
+      el.classList.remove('expanded');
+      el.querySelector('.post-header').setAttribute('aria-expanded', 'false');
+    });
+
+    if (!isOpen) {
+      target.classList.add('expanded');
+      target.querySelector('.post-header').setAttribute('aria-expanded', 'true');
+      if (!skipHistory) {
+        history.pushState({ postId: id }, '', `#${id}`);
+        updateOGForPost(id);
+      }
+      // Smooth scroll with offset for nav
+      setTimeout(() => {
+        const top = target.getBoundingClientRect().top + window.scrollY - 80;
+        window.scrollTo({ top, behavior: 'smooth' });
+      }, 50);
+    } else {
+      if (!skipHistory) {
+        history.pushState({}, '', window.location.pathname);
+        resetOG();
+      }
+    }
+  }
+
+  // ─── OG META UPDATE (for bots that read live DOM — helps with SSR proxies) ─
+  let posts = [];
+
+  function updateOGForPost(id) {
+    const post = posts.find(p => p.id === id);
+    if (!post) return;
+    const url  = `${BASE_URL}/news.html#${id}`;
+    const img  = post.image ? `${BASE_URL}/${post.image}` : `${BASE_URL}/images/21_9aiupscaled4x.png`;
+    document.getElementById('page-title').textContent     = `${post.title} — ORDER // ONE · Aberrant Games`;
+    document.getElementById('og-url').content             = url;
+    document.getElementById('og-title').content           = `${post.title} — ORDER // ONE`;
+    document.getElementById('og-description').content     = post.blurb;
+    document.getElementById('og-image').content           = img;
+    document.getElementById('tw-title').content           = `${post.title} — ORDER // ONE`;
+    document.getElementById('tw-description').content     = post.blurb;
+    document.getElementById('tw-image').content           = img;
+  }
+
+  function resetOG() {
+    document.getElementById('page-title').textContent     = 'Updates — ORDER // ONE · Aberrant Games';
+    document.getElementById('og-url').content             = `${BASE_URL}/news.html`;
+    document.getElementById('og-title').content           = 'Updates — ORDER // ONE · Aberrant Games';
+    document.getElementById('og-description').content     = 'Dev logs, announcements, and updates from Aberrant Games.';
+    const def = `${BASE_URL}/images/21_9aiupscaled4x.png`;
+    document.getElementById('og-image').content           = def;
+    document.getElementById('tw-title').content           = 'Updates — ORDER // ONE · Aberrant Games';
+    document.getElementById('tw-description').content     = 'Dev logs, announcements, and updates from Aberrant Games.';
+    document.getElementById('tw-image').content           = def;
+  }
+
+  // Handle browser back/forward
+  window.addEventListener('popstate', e => {
+    const id = e.state?.postId;
+    document.querySelectorAll('.post-item.expanded').forEach(el => el.classList.remove('expanded'));
+    if (id) { togglePost(id, true); updateOGForPost(id); }
+    else resetOG();
+  });
+
+  // ─── LOAD POSTS ───────────────────────────────────────────────────────────
+  async function loadPosts() {
+    const feed = document.getElementById('postsFeed');
+    try {
+      // Works on any server (deployed or local dev server). Won't work opened as file:// directly.
+      const res = await fetch('./news.json', { cache: 'no-store' });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      posts = await res.json();
+
+      // Newest first
+      posts.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+      feed.innerHTML = '';
+      if (!posts.length) {
+        feed.innerHTML = '<div class="empty-state">No updates yet. Check back soon.</div>';
+        return;
+      }
+
+      posts.forEach((post, i) => feed.appendChild(buildPost(post, i)));
+
+      // Auto-expand from URL hash
+      const hash = window.location.hash.slice(1);
+      if (hash) {
+        const match = posts.find(p => p.id === hash);
+        if (match) {
+          togglePost(match.id, true);
+          updateOGForPost(match.id);
+        }
+      }
+    } catch (err) {
+      const isLocal = location.protocol === 'file:';
+      feed.innerHTML = `<div class="empty-state">${isLocal
+        ? 'Open this page via a local server — run <code style="color:var(--red)">python -m http.server</code> in your site folder, then visit localhost:8000'
+        : 'Could not load updates. Please try again.'
+      }</div>`;
+      console.error(err);
+    }
+  }
+
+  loadPosts();
+</script>
+</body>
+</html>

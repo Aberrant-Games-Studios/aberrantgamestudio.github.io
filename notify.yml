@@ -1,0 +1,70 @@
+name: Notify Discord on News Update
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'news.json'
+
+jobs:
+  discord-notify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Read latest post and fire Discord webhook
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK_URL }}
+        run: |
+          # Parse the latest post (sorted by date descending, take first)
+          POST=$(cat news.json | python3 -c "
+          import json, sys
+          posts = json.load(sys.stdin)
+          posts.sort(key=lambda p: p['date'], reverse=True)
+          p = posts[0]
+          print(json.dumps(p))
+          ")
+
+          ID=$(echo $POST    | python3 -c "import json,sys; print(json.load(sys.stdin)['id'])")
+          TITLE=$(echo $POST | python3 -c "import json,sys; print(json.load(sys.stdin)['title'])")
+          DATE=$(echo $POST  | python3 -c "import json,sys; print(json.load(sys.stdin)['date'])")
+          TAG=$(echo $POST   | python3 -c "import json,sys; print(json.load(sys.stdin).get('tag','Update'))")
+          BLURB=$(echo $POST | python3 -c "import json,sys; print(json.load(sys.stdin)['blurb'])")
+          IMAGE=$(echo $POST | python3 -c "import json,sys; print(json.load(sys.stdin).get('image',''))")
+
+          POST_URL="https://www.aberrantgamestudio.com/news.html#${ID}"
+
+          # Tag → Discord embed color
+          # Announcement = red (14680064), Dev Log = dark grey (2829617), default = dim (7829503)
+          COLOR=7829503
+          if [[ "$TAG" == *"Announce"* ]]; then COLOR=14680064; fi
+          if [[ "$TAG" == *"Dev Log"* ]]; then COLOR=2829617; fi
+
+          # Build the embed payload
+          PAYLOAD=$(python3 -c "
+          import json
+          payload = {
+            'username': 'ORDER // ONE',
+            'embeds': [{
+              'color': $COLOR,
+              'author': {
+                'name': '${TAG}  ·  ${DATE}'
+              },
+              'title': '${TITLE}',
+              'description': '${BLURB}',
+              'url': '${POST_URL}',
+              'footer': {
+                'text': 'aberrantgamestudio.com'
+              }
+            }]
+          }
+          if '${IMAGE}':
+            payload['embeds'][0]['image'] = {'url': 'https://www.aberrantgamestudio.com/${IMAGE}'}
+          print(json.dumps(payload))
+          ")
+
+          curl -s -o /dev/null -w "%{http_code}" \
+            -H "Content-Type: application/json" \
+            -d "$PAYLOAD" \
+            "$DISCORD_WEBHOOK"

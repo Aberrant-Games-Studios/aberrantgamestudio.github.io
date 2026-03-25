@@ -202,19 +202,64 @@
   .rc.feat .rc-cta:hover{background:var(--red-glow);box-shadow:0 0 18px rgba(224,28,28,.5)}
   .modal-ks-cta{display:flex;justify-content:center;margin-top:32px;padding-top:28px;border-top:1px solid var(--border);gap:13px;flex-wrap:wrap}
 
+  /* NEWSLETTER BAND */
+  .nl-band{padding:52px 64px;background:var(--surface);border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:32px;flex-wrap:wrap;position:relative;overflow:hidden}
+  .nl-band::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 80% 50%,rgba(224,28,28,.05) 0%,transparent 60%);pointer-events:none}
+  .nl-left{position:relative;z-index:1}
+  .nl-label{font-family:var(--fm);font-size:.58rem;letter-spacing:.32em;color:var(--red);text-transform:uppercase;margin-bottom:4px}
+  .nl-heading{font-family:var(--fd);font-size:1.5rem;letter-spacing:.07em;color:var(--white)}
+  .nl-sub{font-family:var(--fm);font-size:.58rem;letter-spacing:.14em;color:var(--dim);margin-top:3px;text-transform:uppercase}
+  .nl-form{display:flex;gap:0;position:relative;z-index:1}
+  .nl-input{background:rgba(255,255,255,.04);border:1px solid var(--border);border-right:none;color:var(--white);font-family:var(--fm);font-size:.68rem;letter-spacing:.12em;padding:13px 20px;width:280px;outline:none;transition:border-color .2s}
+  .nl-input::placeholder{color:var(--dim)}
+  .nl-input:focus{border-color:rgba(224,28,28,.5)}
+  .nl-btn{background:var(--red);border:1px solid var(--red);color:#fff;font-family:var(--fm);font-size:.66rem;letter-spacing:.2em;text-transform:uppercase;padding:13px 22px;cursor:pointer;transition:all .2s;white-space:nowrap;clip-path:polygon(0 0,calc(100% - 8px) 0,100% 8px,100% 100%,8px 100%,0 calc(100% - 8px))}
+  .nl-btn:hover{background:var(--red-glow);box-shadow:0 0 20px rgba(224,28,28,.5)}
+  .nl-msg{font-family:var(--fm);font-size:.62rem;letter-spacing:.16em;margin-top:8px;min-height:16px;text-transform:uppercase}
+  .nl-msg.ok{color:var(--green)}.nl-msg.err{color:var(--red)}
+
+  /* LATEST UPDATE BAND */
+  .latest-band{padding:52px 64px;background:var(--bg);border-top:1px solid var(--border);position:relative;overflow:hidden}
+  .latest-band::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 80% 50%,rgba(224,28,28,.05) 0%,transparent 65%);pointer-events:none}
+  .latest-inner{display:grid;grid-template-columns:1fr auto;gap:40px;align-items:center;position:relative;z-index:1}
+  .latest-card{display:flex;gap:28px;align-items:flex-start;text-decoration:none;group:true}
+  .latest-thumb{width:160px;flex-shrink:0;aspect-ratio:16/9;overflow:hidden;border:1px solid var(--border);position:relative;clip-path:polygon(0 0,calc(100% - 8px) 0,100% 8px,100% 100%,8px 100%,0 calc(100% - 8px))}
+  .latest-thumb img{width:100%;height:100%;object-fit:cover;transition:transform .4s;filter:brightness(.85)}
+  .latest-card:hover .latest-thumb img{transform:scale(1.05)}
+  .latest-thumb-placeholder{width:100%;height:100%;background:var(--surface)}
+  .latest-text{flex:1;min-width:0}
+  .latest-eyebrow{font-family:var(--fm);font-size:.55rem;letter-spacing:.32em;color:var(--red);text-transform:uppercase;margin-bottom:7px;display:flex;align-items:center;gap:10px}
+  .latest-eyebrow::before{content:'';width:16px;height:1px;background:var(--red)}
+  .latest-tag{font-family:var(--fm);font-size:.52rem;letter-spacing:.2em;text-transform:uppercase;padding:2px 9px;border:1px solid var(--border);color:var(--dim);margin-right:4px}
+  .latest-date{font-family:var(--fm);font-size:.52rem;letter-spacing:.16em;color:var(--dim)}
+  .latest-title{font-family:var(--fd);font-size:clamp(1.2rem,2vw,1.75rem);letter-spacing:.06em;color:var(--white);line-height:1.1;margin-bottom:8px;transition:color .18s}
+  .latest-card:hover .latest-title{color:var(--red)}
+  .latest-blurb{font-weight:300;font-size:.88rem;line-height:1.7;color:#7a7a7a;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+  .latest-cta{font-family:var(--fm);font-size:.58rem;letter-spacing:.2em;text-transform:uppercase;color:var(--red);margin-top:10px;display:inline-flex;align-items:center;gap:6px}
+  .latest-cta::after{content:'→';transition:transform .18s}
+  .latest-card:hover .latest-cta::after{transform:translateX(4px)}
+  .latest-all-link{display:inline-flex;align-items:center;gap:9px;padding:12px 22px;font-family:var(--fm);font-size:.64rem;letter-spacing:.18em;text-transform:uppercase;color:var(--dim);border:1px solid var(--border);text-decoration:none;transition:all .2s;flex-shrink:0;align-self:center;clip-path:polygon(0 0,calc(100% - 8px) 0,100% 8px,100% 100%,8px 100%,0 calc(100% - 8px))}
+  .latest-all-link:hover{border-color:var(--red);color:var(--red)}
+  .latest-loading{font-family:var(--fm);font-size:.6rem;letter-spacing:.24em;color:var(--dim);text-transform:uppercase}
+
   /* RESPONSIVE */
   @media(max-width:1100px){.media-dual{grid-template-columns:1fr}.rewards-grid{grid-template-columns:repeat(2,1fr)}.features-grid{grid-template-columns:1fr 1fr}}
   @media(max-width:900px){
     nav{padding:14px 24px}.nav-links{display:none}
     .hero-content{padding:0 28px 56px}
     .media-section,.about-section,.team-section{padding:56px 24px}
-    .funded-strip,.ks-band,.platforms-bar{padding:14px 24px}
+    .funded-strip,.ks-band,.platforms-bar,.latest-band{padding:14px 24px}
     footer{padding:28px 24px}
     .plat-note{display:none}
     .plat-div{display:none}
     .modal{padding:28px 20px}
     .features-grid{grid-template-columns:1fr}
     .rewards-grid{grid-template-columns:1fr 1fr}
+    .latest-inner{grid-template-columns:1fr}
+    .latest-thumb{width:100%;aspect-ratio:16/9}
+    .latest-card{flex-direction:column}
+    .nl-band{padding:28px 24px}
+    .nl-input{width:200px}
   }
   @media(max-width:560px){
     .rewards-grid{grid-template-columns:1fr}
@@ -237,6 +282,7 @@
     <li><a href="#media">Media</a></li>
     <li><a href="#about">About</a></li>
     <li><a href="#team">Team</a></li>
+    <li><a href="news.html">Updates</a></li>
   </ul>
 </nav>
 
@@ -267,6 +313,15 @@
   <div class="fstat"><span class="fstat-num">137%</span><span class="fstat-label">Funded</span></div>
   <div class="fstat"><span class="fstat-num">113</span><span class="fstat-label">Backers</span></div>
   <div class="funded-badge">Successfully Funded · March 2, 2026</div>
+</div>
+
+<!-- LATEST UPDATE BAND -->
+<div class="latest-band" id="updates">
+  <div class="sec-label" style="margin-bottom:20px">Latest Update</div>
+  <div class="latest-inner">
+    <div id="latestPostSlot"><span class="latest-loading">Loading latest update...</span></div>
+    <a href="news.html" class="latest-all-link">All Updates →</a>
+  </div>
 </div>
 
 <!-- MEDIA -->
@@ -380,6 +435,42 @@
     </div>
   </div>
 </section>
+
+<!-- NEWSLETTER BAND -->
+<div class="nl-band ml-subscribe-form ml-subscribe-form-38951445">
+  <div class="nl-left">
+    <div class="nl-label">Stay in the Loop</div>
+    <div class="nl-heading">GET UPDATES IN YOUR INBOX</div>
+  </div>
+  <div style="position:relative;z-index:1">
+    <form class="ml-block-form row-form" action="https://assets.mailerlite.com/jsonp/2074926/forms/182888212268582099/subscribe" method="post" target="_blank">
+      <div class="nl-form">
+        <input class="nl-input" type="email" name="fields[email]" placeholder="your@email.com" autocomplete="email"/>
+        <button class="nl-btn" type="submit">Subscribe</button>
+      </div>
+      <input type="hidden" name="ml-submit" value="1"/>
+      <input type="hidden" name="anticsrf" value="true"/>
+    </form>
+    <div class="nl-msg row-success" style="display:none">Thank you! You've signed up for the newsletter!</div>
+  </div>
+</div>
+<script>
+  (function(){
+    const form = document.querySelector('.ml-subscribe-form-38951445 .ml-block-form');
+    const success = document.querySelector('.ml-subscribe-form-38951445 .row-success');
+    if(!form) return;
+    form.addEventListener('submit', async function(e){
+      e.preventDefault();
+      const data = new FormData(form);
+      const params = new URLSearchParams(data).toString();
+      try {
+        await fetch(form.action + '?' + params, { method: 'GET', mode: 'no-cors' });
+      } catch(err) {}
+      form.style.display = 'none';
+      success.style.display = 'block';
+    });
+  })();
+</script>
 
 <!-- FOOTER -->
 <footer>
@@ -570,7 +661,41 @@
     lastY=y;
   });
 
-  // MODALS
+  // LATEST UPDATE BAND
+  (async function(){
+    const slot = document.getElementById('latestPostSlot');
+    if (!slot) return;
+    try {
+      const res   = await fetch('./news.json', { cache: 'no-store' });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const posts = await res.json();
+      if (!posts.length) { slot.innerHTML = ''; return; }
+      posts.sort((a,b) => new Date(b.date) - new Date(a.date));
+      const p = posts[0];
+      const d = new Date(p.date + 'T00:00:00');
+      const dateStr = d.toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'});
+      const thumb = p.image
+        ? `<div class="latest-thumb"><img src="${p.image}" alt="${p.title}" loading="lazy"/></div>`
+        : '';
+      slot.innerHTML = `
+        <a href="news.html#${p.id}" class="latest-card">
+          ${thumb}
+          <div class="latest-text">
+            <div class="latest-eyebrow">
+              <span class="latest-tag">${p.tag || 'Update'}</span>
+              <span class="latest-date">${dateStr}</span>
+            </div>
+            <div class="latest-title">${p.title}</div>
+            <div class="latest-blurb">${p.blurb}</div>
+            <span class="latest-cta">Read Update</span>
+          </div>
+        </a>`;
+    } catch(e) {
+      slot.innerHTML = '<a href="news.html" style="font-family:var(--fm);font-size:.6rem;letter-spacing:.2em;color:var(--dim);text-transform:uppercase;text-decoration:none;">View Updates →</a>';
+    }
+  })();
+
+
   function openModal(id){document.getElementById(id).classList.add('open');document.body.style.overflow='hidden';}
   function closeModal(id){document.getElementById(id).classList.remove('open');document.body.style.overflow='';}
   function handleClick(e,id){if(e.target===document.getElementById(id)||e.target.classList.contains('modal-backdrop'))closeModal(id);}
