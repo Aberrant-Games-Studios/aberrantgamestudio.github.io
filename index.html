@@ -297,6 +297,10 @@
     .fstat{flex:none;width:calc(50% - 6px)}
     .funded-badge{width:100%;border-left:none;border-top:1px solid var(--border);padding-top:12px}
   }
+  @media(max-width:900px) and (orientation:portrait){
+    .media-section{padding-left:12px;padding-right:12px}
+    .media-block-label,.trailer-wrap,.slideshow{width:calc(100vw - 24px);max-width:calc(100vw - 24px)}
+  }
 </style>
 </head>
 <body>
@@ -362,7 +366,7 @@
       <div class="media-block">
         <div class="media-block-label">Reveal Trailer</div>
         <div class="trailer-wrap">
-          <iframe src="https://www.youtube-nocookie.com/embed/cP3KUB4ar2U?rel=0&modestbranding=1" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+          <iframe id="trailerPlayer" src="https://www.youtube-nocookie.com/embed/cP3KUB4ar2U?rel=0&modestbranding=1&enablejsapi=1&playsinline=1&mute=1" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
         </div>
       </div>
       <div class="media-block">
@@ -662,6 +666,26 @@
 </div>
 
 <script>
+  const trailerPlayer=document.getElementById('trailerPlayer');
+  let trailerHasStarted=false;
+  function postToTrailer(func){
+    if(!trailerPlayer) return;
+    trailerPlayer.contentWindow?.postMessage(JSON.stringify({event:'command',func,args:[]}), 'https://www.youtube-nocookie.com');
+  }
+  if(trailerPlayer&&'IntersectionObserver' in window){
+    const trailerObserver=new IntersectionObserver(entries=>{
+      entries.forEach(entry=>{
+        if(entry.isIntersecting&&entry.intersectionRatio>=0.6){
+          trailerHasStarted=true;
+          postToTrailer('playVideo');
+        }else if(trailerHasStarted){
+          postToTrailer('pauseVideo');
+        }
+      });
+    },{threshold:[0.25,0.6,0.85]});
+    trailerObserver.observe(trailerPlayer);
+  }
+
   // SLIDESHOW
   let cur=0;
   let slideshowTimer;
