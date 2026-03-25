@@ -45,9 +45,10 @@
 
   /* HERO */
   .hero{position:relative;width:100%;height:auto;padding:120px 0 0;display:flex;flex-direction:column;justify-content:flex-end;overflow:hidden}
-  .hero-bg{position:absolute;inset:0;background-size:cover;background-position:center right;animation:heroZoom 16s ease-out forwards}
-  @keyframes heroZoom{from{transform:scale(1.06)}to{transform:scale(1)}}
-  .hero-bg::after{content:'';position:absolute;inset:0;background:linear-gradient(105deg,rgba(5,5,7,.94) 25%,rgba(5,5,7,.55) 55%,transparent 80%),linear-gradient(to top,rgba(5,5,7,1) 0%,rgba(5,5,7,.4) 28%,transparent 55%)}
+  .hero-bg{position:absolute;inset:0;background-image:url('images/blackhole.gif');background-size:96% auto;background-position:82% center;background-repeat:no-repeat;animation:heroZoom 16s ease-out forwards;filter:saturate(1.08) contrast(1.04)}
+  @keyframes heroZoom{from{transform:scale(1.01)}to{transform:scale(.97)}}
+  .hero-bg::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 76% 46%,rgba(224,28,28,.14) 0%,rgba(224,28,28,.06) 18%,transparent 50%)}
+  .hero-bg::after{content:'';position:absolute;inset:0;background:linear-gradient(90deg,rgba(5,5,7,.93) 0%,rgba(5,5,7,.86) 24%,rgba(5,5,7,.6) 46%,rgba(5,5,7,.26) 66%,rgba(5,5,7,.08) 82%,rgba(5,5,7,.12) 100%),linear-gradient(to top,rgba(5,5,7,.94) 0%,rgba(5,5,7,.46) 28%,rgba(5,5,7,.06) 62%)}
   .hero-content{position:relative;z-index:2;padding:0 64px 72px;max-width:800px;animation:fadeUp 1s .25s ease both}
   @keyframes fadeUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
   .hero-eyebrow{font-family:var(--fm);font-size:.66rem;letter-spacing:.38em;color:var(--red);text-transform:uppercase;margin-bottom:12px;display:flex;align-items:center;gap:10px}
@@ -116,7 +117,7 @@
   .slideshow.is-fullscreen{position:fixed;inset:0;z-index:350;width:100vw;max-width:none;height:100vh;aspect-ratio:auto;clip-path:none;border:none;background:#020203}
   .slideshow.is-fullscreen .slides{height:100%}
   .slideshow.is-fullscreen .slide img{object-fit:contain;background:#020203}
-  .slideshow.is-fullscreen .slide::after{background:linear-gradient(to bottom,rgba(5,5,7,.18),rgba(5,5,7,.44))}
+  .slideshow.is-fullscreen .slide::after{background:none}
   .slideshow.is-fullscreen .slide-arrow{width:46px;height:46px;background:rgba(5,5,7,.48)}
   .slideshow.is-fullscreen .slide-arrow.prev{left:24px}
   .slideshow.is-fullscreen .slide-arrow.next{right:24px}
