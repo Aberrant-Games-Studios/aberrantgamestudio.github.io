@@ -17,54 +17,44 @@ jobs:
         env:
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK_URL }}
         run: |
-          # Parse the latest post (sorted by date descending, take first)
-          POST=$(cat news.json | python3 -c "
-          import json, sys
-          posts = json.load(sys.stdin)
+          python3 - <<'PYEOF'
+          import json, subprocess, os, urllib.request
+
+          with open('news.json') as f:
+            posts = json.load(f)
+
           posts.sort(key=lambda p: p['date'], reverse=True)
           p = posts[0]
-          print(json.dumps(p))
-          ")
 
-          ID=$(echo $POST    | python3 -c "import json,sys; print(json.load(sys.stdin)['id'])")
-          TITLE=$(echo $POST | python3 -c "import json,sys; print(json.load(sys.stdin)['title'])")
-          DATE=$(echo $POST  | python3 -c "import json,sys; print(json.load(sys.stdin)['date'])")
-          TAG=$(echo $POST   | python3 -c "import json,sys; print(json.load(sys.stdin).get('tag','Update'))")
-          BLURB=$(echo $POST | python3 -c "import json,sys; print(json.load(sys.stdin)['blurb'])")
-          IMAGE=$(echo $POST | python3 -c "import json,sys; print(json.load(sys.stdin).get('image',''))")
+          tag   = p.get('tag', 'Update')
+          date  = p['date']
+          title = p['title']
+          blurb = p['blurb']
+          pid   = p['id']
+          image = p.get('image', '')
 
-          POST_URL="https://www.aberrantgamestudio.com/news.html#${ID}"
+          post_url = f"https://www.aberrantgamestudio.com/news.html#{pid}"
 
-          # Tag → Discord embed color
-          # Announcement = red (14680064), Dev Log = dark grey (2829617), default = dim (7829503)
-          COLOR=7829503
-          if [[ "$TAG" == *"Announce"* ]]; then COLOR=14680064; fi
-          if [[ "$TAG" == *"Dev Log"* ]]; then COLOR=2829617; fi
+          color = 7829503
+          if 'Announce' in tag: color = 14680064
+          if 'Dev Log'  in tag: color = 2829617
 
-          # Build the embed payload
-          PAYLOAD=$(python3 -c "
-          import json
-          payload = {
-            'username': 'ORDER // ONE',
-            'embeds': [{
-              'color': $COLOR,
-              'author': {
-                'name': '${TAG}  ·  ${DATE}'
-              },
-              'title': '${TITLE}',
-              'description': '${BLURB}',
-              'url': '${POST_URL}',
-              'footer': {
-                'text': 'aberrantgamestudio.com'
-              }
-            }]
+          embed = {
+            'color': color,
+            'author': {'name': f'{tag}  ·  {date}'},
+            'title': title,
+            'description': blurb,
+            'url': post_url,
+            'footer': {'text': 'aberrantgamestudio.com'}
           }
-          if '${IMAGE}':
-            payload['embeds'][0]['image'] = {'url': 'https://www.aberrantgamestudio.com/${IMAGE}'}
-          print(json.dumps(payload))
-          ")
 
-          curl -s -o /dev/null -w "%{http_code}" \
-            -H "Content-Type: application/json" \
-            -d "$PAYLOAD" \
-            "$DISCORD_WEBHOOK"
+          if image:
+            embed['image'] = {'url': f'https://www.aberrantgamestudio.com/{image}'}
+
+          payload = json.dumps({'username': 'ORDER // ONE', 'embeds': [embed]}).encode()
+
+          webhook = os.environ['DISCORD_WEBHOOK']
+          req = urllib.request.Request(webhook, data=payload, headers={'Content-Type': 'application/json'})
+          with urllib.request.urlopen(req) as res:
+            print(f"Discord responded: {res.status}")
+          PYEOF
