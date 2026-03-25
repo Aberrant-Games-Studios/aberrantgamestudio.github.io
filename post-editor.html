@@ -642,6 +642,7 @@
   function buildEntry() {
     const imageRaw = document.getElementById('fImage').value.trim();
     const image = imageRaw ? 'images/' + imageRaw.replace(/^images\//i, '') : '';
+    const imageFit = THUMB_MODES[previewThumbModeIdx] || 'cover';
     return {
       id:    document.getElementById('fId').value || slugify(document.getElementById('fTitle').value),
       title: document.getElementById('fTitle').value,
@@ -649,6 +650,7 @@
       tag:   document.getElementById('fTag').value,
       blurb: document.getElementById('fBlurb').value,
       image: image || undefined,
+      imageFit,
       body:  getBodyHtml()
     };
   }
@@ -711,6 +713,7 @@
       document.getElementById('imagePickerText').innerHTML = '<strong>Select image file</strong> — must be in your /images/ folder';
     }
     document.getElementById('fId').value    = p.id;
+    previewThumbModeIdx = Math.max(0, THUMB_MODES.indexOf(p.imageFit || 'cover'));
 
     if (htmlMode) {
       document.getElementById('bodyHtml').value = p.body;
@@ -746,6 +749,7 @@
     document.getElementById('fTag').value   = 'Announcement';
     document.getElementById('fBlurb').value = '';
     document.getElementById('fImage').value = '';
+    previewThumbModeIdx = 0;
     document.getElementById('imagePickerZone').style.borderColor = 'rgba(224,28,28,.3)';
     document.getElementById('imagePickerText').innerHTML = '<strong>Select image file</strong> — must be in your /images/ folder';
     document.getElementById('fImageFile').value = '';
