@@ -439,10 +439,7 @@
         }
       }
     } catch (err) {
-      const isLocal = location.protocol === 'file:';
-      feed.innerHTML = `<div class="empty-state">${isLocal
-        'Could not load updates. Please try again.'
-      }</div>`;
+      feed.innerHTML = '<div class="empty-state">Could not load updates. Please try again.</div>';
       console.error(err);
     }
   }
