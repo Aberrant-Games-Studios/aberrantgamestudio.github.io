@@ -87,12 +87,13 @@
 
   /* MEDIA */
   .media-section{padding:80px 64px 72px;background:var(--bg)}
-  .media-dual{display:grid;grid-template-columns:1.4fr 1fr;gap:20px;align-items:start}
-  .media-block{display:flex;flex-direction:column}
-  .media-block-label{font-family:var(--fm);font-size:.58rem;letter-spacing:.3em;color:var(--dim);text-transform:uppercase;margin-bottom:10px}
-  .trailer-wrap{width:100%;aspect-ratio:16/9;background:#0a0a0e;border:1px solid var(--border);position:relative;overflow:hidden;clip-path:polygon(0 0,calc(100% - 16px) 0,100% 16px,100% 100%,16px 100%,0 calc(100% - 16px))}
+  .media-stack{width:100%}
+  .media-dual{display:flex;flex-direction:column;gap:20px;align-items:stretch}
+  .media-block{display:flex;flex-direction:column;align-items:center;width:100%}
+  .media-block-label{width:min(100%,1188px);font-family:var(--fm);font-size:.58rem;letter-spacing:.3em;color:var(--dim);text-transform:uppercase;margin-bottom:10px;text-align:left}
+  .trailer-wrap{width:min(100%,1188px);aspect-ratio:16/9;background:#0a0a0e;border:1px solid var(--border);position:relative;overflow:hidden;clip-path:polygon(0 0,calc(100% - 16px) 0,100% 16px,100% 100%,16px 100%,0 calc(100% - 16px))}
   .trailer-wrap iframe{position:absolute;inset:0;width:100%;height:100%;border:none}
-  .slideshow{width:100%;aspect-ratio:16/9;background:#0a0a0e;border:1px solid var(--border);overflow:hidden;position:relative;clip-path:polygon(0 0,calc(100% - 12px) 0,100% 12px,100% 100%,12px 100%,0 calc(100% - 12px))}
+  .slideshow{width:min(100%,1188px);aspect-ratio:16/9;background:#0a0a0e;border:1px solid var(--border);overflow:hidden;position:relative;clip-path:polygon(0 0,calc(100% - 12px) 0,100% 12px,100% 100%,12px 100%,0 calc(100% - 12px))}
   .slides{display:flex;width:100%;height:100%;transition:transform .65s cubic-bezier(.77,0,.18,1)}
   .slide{min-width:100%;height:100%;position:relative;overflow:hidden}
   .slide img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
@@ -108,6 +109,19 @@
   .slide-arrow{position:absolute;top:50%;transform:translateY(-50%);background:rgba(5,5,7,.6);border:1px solid var(--border);color:var(--white);width:38px;height:38px;display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:10;font-size:1.1rem;transition:all .18s}
   .slide-arrow:hover{background:var(--red);border-color:var(--red)}
   .slide-arrow.prev{left:12px}.slide-arrow.next{right:12px}
+  .slide-fullscreen-toggle{position:absolute;top:12px;right:12px;width:42px;height:42px;border:1px solid rgba(240,240,240,.22);background:rgba(5,5,7,.38);color:var(--white);display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:12;opacity:0;transform:translateY(-4px);transition:opacity .2s,transform .2s,border-color .18s,background .18s}
+  .slideshow:hover .slide-fullscreen-toggle,.slideshow:focus-within .slide-fullscreen-toggle,.slide-fullscreen-toggle.visible{opacity:1;transform:translateY(0)}
+  .slide-fullscreen-toggle:hover{border-color:var(--red);background:rgba(224,28,28,.16)}
+  .slide-fullscreen-toggle svg{width:19px;height:19px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:square;stroke-linejoin:miter}
+  .slideshow.is-fullscreen{position:fixed;inset:0;z-index:350;width:100vw;max-width:none;height:100vh;aspect-ratio:auto;clip-path:none;border:none;background:#020203}
+  .slideshow.is-fullscreen .slides{height:100%}
+  .slideshow.is-fullscreen .slide img{object-fit:contain;background:#020203}
+  .slideshow.is-fullscreen .slide::after{background:linear-gradient(to bottom,rgba(5,5,7,.18),rgba(5,5,7,.44))}
+  .slideshow.is-fullscreen .slide-arrow{width:46px;height:46px;background:rgba(5,5,7,.48)}
+  .slideshow.is-fullscreen .slide-arrow.prev{left:24px}
+  .slideshow.is-fullscreen .slide-arrow.next{right:24px}
+  .slideshow.is-fullscreen .slide-nav{bottom:24px}
+  body.media-fullscreen{overflow:hidden}
 
   /* ABOUT */
   .about-section{padding:80px 64px;background:var(--surface);border-top:1px solid var(--border)}
@@ -243,7 +257,7 @@
   .latest-loading{font-family:var(--fm);font-size:.6rem;letter-spacing:.24em;color:var(--dim);text-transform:uppercase}
 
   /* RESPONSIVE */
-  @media(max-width:1100px){.media-dual{grid-template-columns:1fr}.rewards-grid{grid-template-columns:repeat(2,1fr)}.features-grid{grid-template-columns:1fr 1fr}}
+  @media(max-width:1100px){.trailer-wrap,.slideshow{width:100%}.rewards-grid{grid-template-columns:repeat(2,1fr)}.features-grid{grid-template-columns:1fr 1fr}}
   @media(max-width:900px){
     nav{padding:14px 24px}.nav-links{display:none}
     .hero-content{padding:0 28px 56px}
@@ -260,6 +274,10 @@
     .latest-card{flex-direction:column}
     .nl-band{padding:28px 24px}
     .nl-input{width:200px}
+    .slide-fullscreen-toggle{opacity:1;transform:none}
+    .slideshow.is-fullscreen .slide-arrow.prev{left:12px}
+    .slideshow.is-fullscreen .slide-arrow.next{right:12px}
+    .slideshow.is-fullscreen .slide-nav{bottom:16px}
   }
   @media(max-width:560px){
     .rewards-grid{grid-template-columns:1fr}
@@ -326,32 +344,41 @@
 
 <!-- MEDIA -->
 <section class="media-section" id="media">
-  <div class="sec-label">Trailer &amp; Screenshots</div>
-  <h2 class="sec-title">SEE IT IN ACTION</h2>
-  <div class="media-block" style="margin-bottom:20px">
-    <div class="media-block-label">Reveal Trailer</div>
-    <div class="trailer-wrap">
-      <iframe src="https://www.youtube-nocookie.com/embed/cP3KUB4ar2U?rel=0&modestbranding=1" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
-    </div>
-  </div>
-  <div class="media-block">
-    <div class="media-block-label">Screenshots</div>
-    <div class="slideshow">
-        <div class="slides" id="slides">
-            <div class="slide"><img src="images/21_9aiupscaled4x.png" alt="ORDER // ONE" /></div>
-            <div class="slide"><img src="images/image1.jpg" alt="Screenshot 01" /></div>
-            <div class="slide"><img src="images/image2.jpg" alt="Screenshot 02" /></div>
-            <div class="slide"><img src="images/image3.jpg" alt="Screenshot 03" /></div>
-            <div class="slide"><img src="images/image4.jpg" alt="Screenshot 04" /></div>
-            <div class="slide"><img src="images/image5.jpg" alt="Screenshot 05" /></div>
-            <div class="slide"><img src="images/image6.jpg" alt="Screenshot 06" /></div>
-            <div class="slide"><img src="images/image7.jpg" alt="Screenshot 07" /></div>
-            <div class="slide"><img src="images/image8.jpg" alt="Screenshot 08" /></div>
-            <div class="slide"><img src="images/image9.jpg" alt="Screenshot 09" /></div>
+  <div class="media-stack">
+    <div class="sec-label">Trailer &amp; Screenshots</div>
+    <h2 class="sec-title">SEE IT IN ACTION</h2>
+    <div class="media-dual">
+      <div class="media-block">
+        <div class="media-block-label">Reveal Trailer</div>
+        <div class="trailer-wrap">
+          <iframe src="https://www.youtube-nocookie.com/embed/cP3KUB4ar2U?rel=0&modestbranding=1" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
         </div>
-      <button class="slide-arrow prev" onclick="shiftSlide(-1)">&#8249;</button>
-      <button class="slide-arrow next" onclick="shiftSlide(1)">&#8250;</button>
-      <div class="slide-nav" id="slideNav"></div>
+      </div>
+      <div class="media-block">
+        <div class="media-block-label">Screenshots</div>
+        <div class="slideshow" id="screenshotSlideshow">
+          <div class="slides" id="slides">
+              <div class="slide"><img src="images/21_9aiupscaled4x.png" alt="ORDER // ONE" /></div>
+              <div class="slide"><img src="images/image1.jpg" alt="Screenshot 01" /></div>
+              <div class="slide"><img src="images/image2.jpg" alt="Screenshot 02" /></div>
+              <div class="slide"><img src="images/image3.jpg" alt="Screenshot 03" /></div>
+              <div class="slide"><img src="images/image4.jpg" alt="Screenshot 04" /></div>
+              <div class="slide"><img src="images/image5.jpg" alt="Screenshot 05" /></div>
+              <div class="slide"><img src="images/image6.jpg" alt="Screenshot 06" /></div>
+              <div class="slide"><img src="images/image7.jpg" alt="Screenshot 07" /></div>
+              <div class="slide"><img src="images/image8.jpg" alt="Screenshot 08" /></div>
+              <div class="slide"><img src="images/image9.jpg" alt="Screenshot 09" /></div>
+          </div>
+          <button class="slide-fullscreen-toggle" id="fullscreenToggle" type="button" aria-label="Open screenshot fullscreen view" aria-pressed="false">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M8 3H3v5M16 3h5v5M21 16v5h-5M8 21H3v-5"></path>
+            </svg>
+          </button>
+          <button class="slide-arrow prev" onclick="shiftSlide(-1,true)">&#8249;</button>
+          <button class="slide-arrow next" onclick="shiftSlide(1,true)">&#8250;</button>
+          <div class="slide-nav" id="slideNav"></div>
+        </div>
+      </div>
     </div>
   </div>
 </section>
@@ -626,28 +653,78 @@
 <script>
   // SLIDESHOW
   let cur=0;
+  let slideshowTimer;
+  let slideshowResumeTimer;
+  let isSlideshowHovered=false;
+  const AUTO_SLIDE_DELAY=5500;
+  const MANUAL_RESUME_DELAY=8500;
   const slidesEl=document.getElementById('slides');
   const navEl=document.getElementById('slideNav');
+  const slideshowEl=document.getElementById('screenshotSlideshow');
+  const fullscreenToggle=document.getElementById('fullscreenToggle');
   const total=document.querySelectorAll('.slide').length;
   for(let i=0;i<total;i++){
     const d=document.createElement('div');
     d.className='slide-dot'+(i===0?' active':'');
-    d.onclick=()=>goTo(i);
+    d.onclick=()=>goTo(i,true);
     navEl.appendChild(d);
   }
-  function goTo(n){cur=(n+total)%total;slidesEl.style.transform=`translateX(-${cur*100}%)`;document.querySelectorAll('.slide-dot').forEach((d,i)=>d.classList.toggle('active',i===cur));}
-  function shiftSlide(d){goTo(cur+d);}
-  setInterval(()=>shiftSlide(1),5500);
+  function goTo(n,isManual=false){
+    cur=(n+total)%total;
+    slidesEl.style.transform=`translateX(-${cur*100}%)`;
+    document.querySelectorAll('.slide-dot').forEach((d,i)=>d.classList.toggle('active',i===cur));
+    if(isManual) pauseAndResumeSlideshow();
+  }
+  function shiftSlide(d,isManual=false){goTo(cur+d,isManual);}
+  function startSlideshowTimer(){
+    clearInterval(slideshowTimer);
+    slideshowTimer=setInterval(()=>shiftSlide(1),AUTO_SLIDE_DELAY);
+  }
+  function pauseAndResumeSlideshow(){
+    clearInterval(slideshowTimer);
+    clearTimeout(slideshowResumeTimer);
+    slideshowResumeTimer=setTimeout(()=>startSlideshowTimer(),MANUAL_RESUME_DELAY);
+  }
+  function updateFullscreenIcon(){
+    const isFullscreen=slideshowEl.classList.contains('is-fullscreen');
+    fullscreenToggle.setAttribute('aria-label',isFullscreen?'Close screenshot fullscreen view':'Open screenshot fullscreen view');
+    fullscreenToggle.setAttribute('aria-pressed',String(isFullscreen));
+    fullscreenToggle.innerHTML=isFullscreen
+      ? '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 3v6H3M15 3v6h6M9 21v-6H3M15 21v-6h6"></path></svg>'
+      : '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 3H3v5M16 3h5v5M21 16v5h-5M8 21H3v-5"></path></svg>';
+  }
+  function setSlideshowFullscreen(force){
+    const shouldOpen=typeof force==='boolean'?force:!slideshowEl.classList.contains('is-fullscreen');
+    slideshowEl.classList.toggle('is-fullscreen',shouldOpen);
+    document.body.classList.toggle('media-fullscreen',shouldOpen);
+    fullscreenToggle.classList.toggle('visible',shouldOpen);
+    updateFullscreenIcon();
+  }
+  fullscreenToggle.addEventListener('click',()=>setSlideshowFullscreen());
+  slideshowEl.addEventListener('mouseenter',()=>{isSlideshowHovered=true;});
+  slideshowEl.addEventListener('mouseleave',()=>{isSlideshowHovered=false;});
+  document.addEventListener('keydown',e=>{
+    if((e.key==='ArrowLeft'||e.key==='ArrowRight')&&(isSlideshowHovered||slideshowEl.classList.contains('is-fullscreen'))){
+      e.preventDefault();
+      shiftSlide(e.key==='ArrowRight'?1:-1,true);
+      return;
+    }
+    if(e.key==='Escape'&&slideshowEl.classList.contains('is-fullscreen')){
+      setSlideshowFullscreen(false);
+    }
+  });
+  startSlideshowTimer();
+  updateFullscreenIcon();
 
   // TOUCH SWIPE for slideshow
   (function(){
-    const sw=document.querySelector('.slideshow');
+    const sw=slideshowEl;
     let tx=0,ty=0;
     sw.addEventListener('touchstart',e=>{tx=e.touches[0].clientX;ty=e.touches[0].clientY;},{passive:true});
     sw.addEventListener('touchend',e=>{
       const dx=e.changedTouches[0].clientX-tx;
       const dy=e.changedTouches[0].clientY-ty;
-      if(Math.abs(dx)>Math.abs(dy)&&Math.abs(dx)>30){shiftSlide(dx<0?1:-1);}
+      if(Math.abs(dx)>Math.abs(dy)&&Math.abs(dx)>30){shiftSlide(dx<0?1:-1,true);}
     },{passive:true});
   })();
 
