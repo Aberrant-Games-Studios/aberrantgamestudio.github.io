@@ -18,7 +18,7 @@ jobs:
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK_URL }}
         run: |
           python3 - <<'PYEOF'
-          import json, subprocess, os, urllib.request
+          import json, os, urllib.parse, urllib.request
 
           with open('news.json') as f:
             posts = json.load(f)
@@ -33,7 +33,8 @@ jobs:
           pid   = p['id']
           image = p.get('image', '')
 
-          post_url = f"https://www.aberrantgamestudio.com/news.html#{pid}"
+          site_url = "https://www.aberrantgamestudio.com"
+          post_url = f"{site_url}/news.html#{pid}"
 
           color = 7829503
           if 'Announce' in tag: color = 14680064
@@ -49,7 +50,17 @@ jobs:
           }
 
           if image:
-            embed['image'] = {'url': f'https://www.aberrantgamestudio.com/{image}'}
+            normalized_image = urllib.parse.urljoin(f"{site_url}/", image.lstrip('/'))
+            parsed = urllib.parse.urlsplit(normalized_image)
+            cache_bust = urllib.parse.urlencode({'v': f'{date}-{pid}'})
+            image_url = urllib.parse.urlunsplit((
+              parsed.scheme,
+              parsed.netloc,
+              urllib.parse.quote(parsed.path),
+              cache_bust,
+              parsed.fragment
+            ))
+            embed['image'] = {'url': image_url}
 
           payload = json.dumps({'username': 'ORDER // ONE', 'embeds': [embed]}).encode()
 

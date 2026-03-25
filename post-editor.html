@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8"/>
+<meta http-equiv="Cache-Control" content="no-store"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>ORDER // ONE — Post Editor</title>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Share+Tech+Mono&family=Barlow:wght@300;400;600&display=swap" rel="stylesheet">
@@ -161,7 +162,7 @@
   }
 </style>
 </head>
-<body>
+<body autocomplete="off">
 
 <!-- TOP BAR -->
 <div class="top-bar">
@@ -198,7 +199,7 @@
     <!-- FORM FIELDS -->
     <div class="field">
       <div class="field-label">Post Title</div>
-      <input type="text" id="fTitle" placeholder="WE DID IT! Kickstarter is Funded!" oninput="updatePreview();updateId()"/>
+      <input type="text" id="fTitle" autocomplete="off" placeholder="WE DID IT! Kickstarter is Funded!" oninput="updatePreview();updateId()"/>
     </div>
 
     <div class="field-row">
@@ -222,13 +223,13 @@
 
     <div class="field">
       <div class="field-label">Post ID <span>auto-generated · used in URL #anchor</span></div>
-      <input type="text" id="fId" placeholder="auto-generated-from-title" oninput="updatePreview()"/>
+      <input type="text" id="fId" autocomplete="off" placeholder="auto-generated-from-title" oninput="updatePreview()"/>
       <div class="id-preview" id="idPreview"></div>
     </div>
 
     <div class="field">
       <div class="field-label">Blurb <span>shown in previews &amp; Discord embed</span></div>
-      <textarea id="fBlurb" rows="3" placeholder="Short summary shown on news page cards and in the Discord notification..." oninput="updatePreview();countChars(this,'blurbCount',220)"></textarea>
+      <textarea id="fBlurb" autocomplete="off" rows="3" placeholder="Short summary shown on news page cards and in the Discord notification..." oninput="updatePreview();countChars(this,'blurbCount',220)"></textarea>
       <div class="char-count" id="blurbCount">0 / 220</div>
     </div>
 
@@ -570,29 +571,30 @@
     }
 
     const entry = buildEntry();
-    // Remove undefined fields
     if (!entry.image) delete entry.image;
 
     if (editingId !== null) {
-      // Replace existing
+      // Update existing post in place
       const idx = posts.findIndex(p => p.id === editingId);
       if (idx !== -1) posts[idx] = entry;
-      editingId = null;
-      document.getElementById('saveBtn2').textContent = 'Add Post →';
-      document.getElementById('cancelBtn').style.display = 'none';
-      showStatus('formStatus', `✓ Post updated: "${entry.title}"`, 'ok');
-      document.getElementById('downloadBtn').style.display = 'inline-flex';
+      // Stay in edit mode on this post so further changes keep saving to the same entry
+      editingId = entry.id;
+      showStatus('formStatus', `✓ Saved: "${entry.title}" · Keep editing or download when done`, 'ok');
     } else {
-      // Check for duplicate id
+      // New post — guard duplicate id
       if (posts.find(p => p.id === entry.id)) {
         entry.id = entry.id + '-' + Date.now();
+        document.getElementById('fId').value = entry.id;
       }
-      // Add to front (newest first)
       posts.unshift(entry);
-      showStatus('formStatus', `✓ Post added: "${entry.title}"`, 'ok');
-      document.getElementById('downloadBtn').style.display = 'inline-flex';
+      // Switch into edit mode on the newly created post
+      editingId = entry.id;
+      document.getElementById('saveBtn2').textContent = 'Save Changes →';
+      document.getElementById('cancelBtn').style.display = 'inline-flex';
+      showStatus('formStatus', `✓ Post added: "${entry.title}" · Keep editing or download when done`, 'ok');
     }
 
+    document.getElementById('downloadBtn').style.display = 'inline-flex';
     document.getElementById('postsSection').style.display = 'block';
     renderPostsList();
   }
@@ -624,6 +626,7 @@
 
     editingId = id;
     document.getElementById('saveBtn2').textContent = 'Save Changes →';
+    document.getElementById('cancelBtn').style.display = 'inline-flex';
     document.getElementById('idPreview').innerHTML = `URL anchor: <span>#${p.id}</span>`;
 
     updatePreview();
@@ -663,7 +666,9 @@
       document.getElementById('bodyEditor').innerHTML = '';
     }
 
-    document.getElementById('saveBtn2').textContent = 'Add to Posts →';
+    document.getElementById('saveBtn2').textContent = 'Add Post →';
+    document.getElementById('cancelBtn').style.display = 'none';
+    document.getElementById('downloadBtn').style.display = posts.length ? 'inline-flex' : 'none';
     document.getElementById('formStatus').className = 'status-bar';
 
     renderPostsList();
