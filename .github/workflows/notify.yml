@@ -62,7 +62,11 @@ jobs:
             ))
             embed['image'] = {'url': image_url}
 
-          payload = json.dumps({'username': 'ORDER // ONE', 'embeds': [embed]}).encode()
+          payload = json.dumps({
+            'username': 'ORDER // ONE',
+            'avatar_url': f'{site_url}/images/circle.png',
+            'embeds': [embed]
+          }).encode()
 
           webhook = os.environ['DISCORD_WEBHOOK']
           
