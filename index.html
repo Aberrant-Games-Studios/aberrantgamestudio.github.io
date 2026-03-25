@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
 <title>ORDER // ONE — Aberrant Games</title>
 
 <!-- Open Graph / Discord / Slack / iMessage -->
@@ -29,7 +29,7 @@
     --fd:'Bebas Neue',sans-serif;--fm:'Share Tech Mono',monospace;--fb:'Barlow',sans-serif;
   }
   *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-  html{scroll-behavior:smooth}
+  html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
   body{background:var(--bg);color:var(--white);font-family:var(--fb);overflow-x:hidden;cursor:crosshair}
   body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:9998;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.05) 2px,rgba(0,0,0,0.05) 4px)}
   ::-webkit-scrollbar{width:3px}::-webkit-scrollbar-track{background:var(--bg)}::-webkit-scrollbar-thumb{background:var(--red)}
@@ -41,7 +41,7 @@
   .nav-studio{font-family:var(--fd);font-size:1rem;letter-spacing:.12em;color:var(--white)}
   .nav-links{display:flex;gap:32px;list-style:none;flex-wrap:wrap;justify-content:flex-end}
   .nav-links a{font-family:var(--fm);font-size:.66rem;letter-spacing:.22em;color:var(--dim);text-decoration:none;text-transform:uppercase;transition:color .18s}
-  .nav-links a:hover{color:var(--red)}
+  .nav-links a:hover,.nav-links a.active{color:var(--red)}
 
   /* HERO */
   .hero{position:relative;width:100%;height:auto;padding:120px 0 0;display:flex;flex-direction:column;justify-content:flex-end;overflow:hidden}
@@ -739,13 +739,29 @@
 
   // NAV
   const nav=document.getElementById('nav');
+  const sectionLinks=[...document.querySelectorAll('.nav-links a[href^="#"]')];
+  const trackedSections=sectionLinks
+    .map(link=>({link,section:document.querySelector(link.getAttribute('href'))}))
+    .filter(item=>item.section);
   let lastY=0;
+  function updateActiveNavLink(){
+    const probeY=window.scrollY+140;
+    let activeId=trackedSections[0]?.section.id||'';
+    trackedSections.forEach(({section})=>{
+      if(section.offsetTop<=probeY) activeId=section.id;
+    });
+    sectionLinks.forEach(link=>link.classList.toggle('active',link.getAttribute('href')===`#${activeId}`));
+  }
   window.addEventListener('scroll',()=>{
     const y=window.scrollY,hide=y>lastY&&y>80;
     nav.style.opacity=hide?'0':'1';
     nav.style.transform=hide?'translateY(-100%)':'translateY(0)';
     lastY=y;
+    updateActiveNavLink();
   });
+  window.addEventListener('load',updateActiveNavLink);
+  window.addEventListener('resize',updateActiveNavLink);
+  updateActiveNavLink();
 
   // LATEST UPDATE BAND
   (async function(){
