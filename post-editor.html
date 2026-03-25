@@ -69,14 +69,36 @@
   .rich-btn{background:transparent;border:none;color:var(--dim);cursor:pointer;padding:5px 9px;font-family:var(--fm);font-size:.65rem;letter-spacing:.06em;transition:color .15s,background .15s;border-radius:1px}
   .rich-btn:hover{color:var(--white);background:rgba(255,255,255,.07)}
   .rich-btn.active{color:var(--red)}
+  .rich-btn svg{width:14px;height:14px;display:block;stroke:currentColor;fill:none;stroke-width:1.5;stroke-linecap:square}
   .rich-sep{width:1px;background:var(--border-dim);margin:2px 4px;align-self:stretch}
   #bodyEditor{min-height:180px;padding:14px 16px;outline:none;font-family:var(--fb);font-size:.88rem;line-height:1.75;color:#c8c8c8;background:transparent;caret-color:var(--red)}
   #bodyEditor:empty::before{content:attr(data-placeholder);color:rgba(122,122,122,0.5);pointer-events:none;font-weight:300}
   #bodyEditor p{margin-bottom:10px}
+  #bodyEditor [style*="text-align:center"]{text-align:center}
+  #bodyEditor [style*="text-align:right"]{text-align:right}
+  #bodyEditor [style*="text-align:left"]{text-align:left}
   #bodyEditor strong{color:var(--white)}
   #bodyEditor em{color:#a8a8a8;font-style:italic}
   #bodyEditor a{color:var(--red);text-decoration:underline}
-  #bodyEditor img{max-width:100%;margin:8px 0;display:block;border:1px solid var(--border)}
+  #bodyEditor img{max-width:100%;margin:8px 0;display:block;border:1px solid var(--border);cursor:pointer;transition:outline .15s}
+  #bodyEditor img.img-selected{outline:2px solid var(--red);outline-offset:2px}
+
+  /* IMAGE SCALE CONTROLS */
+  .img-scale-wrap{position:relative;display:inline-block;max-width:100%}
+  .img-scale-wrap img{display:block}
+  .img-scale-bar{position:absolute;bottom:0;left:0;right:0;display:flex;align-items:center;justify-content:center;gap:0;background:rgba(5,5,7,.82);border-top:1px solid var(--border);opacity:0;transition:opacity .18s;pointer-events:none}
+  .img-scale-wrap:hover .img-scale-bar,
+  .img-scale-wrap.active .img-scale-bar{opacity:1;pointer-events:all}
+  .img-scale-btn{background:transparent;border:none;color:var(--white);font-family:var(--fm);font-size:.9rem;padding:5px 14px;cursor:pointer;line-height:1;transition:color .15s,background .15s}
+  .img-scale-btn:hover{color:var(--red);background:rgba(224,28,28,.1)}
+  .img-scale-pct{font-family:var(--fm);font-size:.58rem;letter-spacing:.18em;color:var(--dim);min-width:46px;text-align:center;padding:5px 4px}
+
+  /* Preview body images also get scale wrap */
+  .preview-body .img-scale-wrap{display:block}
+  .preview-thumb-wrap{position:relative;width:100%;aspect-ratio:16/9;background:var(--surface2);overflow:hidden;border-bottom:1px solid var(--border)}
+  .preview-thumb-wrap img{width:100%;height:100%;object-fit:cover;display:block}
+  .preview-thumb-wrap .img-scale-bar{border-top:none;border-bottom:1px solid var(--border);top:auto;bottom:0}
+  .preview-thumb-wrap:hover .img-scale-bar{opacity:1;pointer-events:all}
   #bodyEditor h3{font-family:var(--fd);font-size:1.1rem;letter-spacing:.1em;color:var(--white);margin-bottom:8px}
 
   /* STATUS */
@@ -120,9 +142,11 @@
   .preview-blurb{font-weight:300;font-size:.84rem;line-height:1.7;color:#7a7a7a}
   .preview-body{padding:20px 24px 24px;font-weight:300;font-size:.87rem;line-height:1.8;color:#b0b0b0}
   .preview-body p{margin-bottom:12px}
+  .preview-body h3{font-family:var(--fd);font-size:1.1rem;letter-spacing:.1em;color:var(--white);margin:18px 0 10px;text-transform:uppercase}
   .preview-body strong{color:var(--white);font-weight:600}
   .preview-body em{color:#999;font-style:italic}
   .preview-body img{max-width:100%;margin:8px 0;display:block;border:1px solid var(--border)}
+  .preview-body .img-scale-wrap{margin:8px 0}
   .preview-empty{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:300px;gap:10px;opacity:.35}
   .preview-empty-icon{font-family:var(--fd);font-size:3rem;letter-spacing:.1em;color:var(--red)}
   .preview-empty-text{font-family:var(--fm);font-size:.58rem;letter-spacing:.26em;text-transform:uppercase;color:var(--dim)}
@@ -249,6 +273,22 @@
           <button class="rich-btn" onclick="insertHeading()" title="Heading">H3</button>
           <button class="rich-btn" onclick="fmt('insertUnorderedList')" title="List">• List</button>
           <div class="rich-sep"></div>
+          <button class="rich-btn" onclick="applyAlignment('left')" title="Align left" aria-label="Align left">
+            <svg viewBox="0 0 16 16" aria-hidden="true">
+              <path d="M2 3h9M2 6h12M2 9h8M2 12h11"></path>
+            </svg>
+          </button>
+          <button class="rich-btn" onclick="applyAlignment('center')" title="Align center" aria-label="Align center">
+            <svg viewBox="0 0 16 16" aria-hidden="true">
+              <path d="M4 3h8M2 6h12M4 9h8M3 12h10"></path>
+            </svg>
+          </button>
+          <button class="rich-btn" onclick="applyAlignment('right')" title="Align right" aria-label="Align right">
+            <svg viewBox="0 0 16 16" aria-hidden="true">
+              <path d="M5 3h9M2 6h12M6 9h8M3 12h11"></path>
+            </svg>
+          </button>
+          <div class="rich-sep"></div>
           <button class="rich-btn" onclick="insertLink()" title="Link">Link</button>
           <button class="rich-btn" onclick="document.getElementById('inlineImgInput').click()" title="Insert image from /images/ folder">Img</button>
           <input type="file" id="inlineImgInput" accept="image/*" style="display:none" onchange="insertImg(event)"/>
@@ -309,6 +349,7 @@
   let posts = [];
   let editingId = null;
   let htmlMode = false;
+  let previewThumbModeIdx = 0;
 
   // Set today's date
   document.getElementById('fDate').value = new Date().toISOString().split('T')[0];
@@ -479,6 +520,39 @@
     updatePreview();
   }
 
+  function applyImageAlignment(img, align) {
+    if (!img) return;
+    img.style.display = 'block';
+    img.dataset.align = align;
+    if (align === 'center') {
+      img.style.margin = '16px auto';
+    } else if (align === 'right') {
+      img.style.marginTop = '16px';
+      img.style.marginBottom = '16px';
+      img.style.marginLeft = 'auto';
+      img.style.marginRight = '0';
+    } else {
+      img.style.marginTop = '16px';
+      img.style.marginBottom = '16px';
+      img.style.marginLeft = '0';
+      img.style.marginRight = 'auto';
+    }
+  }
+
+  function applyAlignment(align) {
+    const editor = document.getElementById('bodyEditor');
+    const selectedImg = editor.querySelector('img.img-selected');
+    if (selectedImg) {
+      applyImageAlignment(selectedImg, align);
+      updatePreview();
+      return;
+    }
+    editor.focus();
+    const cmd = align === 'center' ? 'justifyCenter' : align === 'right' ? 'justifyRight' : 'justifyLeft';
+    document.execCommand(cmd, false, null);
+    updatePreview();
+  }
+
   function toggleHtmlMode() {
     htmlMode = !htmlMode;
     const editor = document.getElementById('bodyEditor');
@@ -532,7 +606,14 @@
     const dateStr = date ? new Date(date + 'T00:00:00').toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'}) : '';
 
     const thumbHtml = image
-      ? `<div class="preview-thumb"><img src="${image}" alt="${title}" onerror="this.style.display='none'"/></div>`
+      ? `<div class="preview-thumb-wrap" id="previewThumbWrap">
+          <img src="${image}" alt="${title}" onerror="this.style.display='none'" id="previewThumbImg"/>
+          <div class="img-scale-bar">
+            <button class="img-scale-btn" onclick="scalePreviewThumb(-1)">&#8592;</button>
+            <span class="img-scale-pct" id="previewThumbPct">Cover</span>
+            <button class="img-scale-btn" onclick="scalePreviewThumb(1)">&#8594;</button>
+          </div>
+        </div>`
       : `<div class="preview-thumb"><div class="preview-thumb-placeholder">No Image · ${image || 'image path not set'}</div></div>`;
 
     out.innerHTML = `
@@ -546,8 +627,11 @@
           <div class="preview-title">${title || '<span style="opacity:.3">Post Title</span>'}</div>
           <div class="preview-blurb">${blurb || '<span style="opacity:.3">Blurb will appear here...</span>'}</div>
         </div>
-        <div class="preview-body">${body || '<p style="opacity:.3">Body content will appear here...</p>'}</div>
+        <div class="preview-body" id="previewBody">${body || '<p style="opacity:.3">Body content will appear here...</p>'}</div>
       </div>`;
+
+    wrapImagesInPreview();
+    applyPreviewThumbScale();
 
     // Update JSON
     const entry = buildEntry();
@@ -737,6 +821,183 @@
       setTimeout(() => btn.textContent = 'Copy', 1500);
     });
   }
+
+  // ── IMAGE SCALING ─────────────────────────────────────────────
+  const SCALE_STEPS = [25,33,40,50,60,70,75,80,90,100,110,120,130,140,150,175,200];
+
+  function getNearestStepIdx(pct) {
+    let best = 0, diff = Infinity;
+    SCALE_STEPS.forEach((s,i) => { const d = Math.abs(s - pct); if (d < diff) { diff = d; best = i; } });
+    return best;
+  }
+
+  function getImgCurrentPct(img) {
+    const w = img.style.width || '';
+    const m = w.match(/^(\d+)%$/);
+    return m ? parseInt(m[1]) : 100;
+  }
+
+  // Editor images — click to select, then arrows appear
+  function initEditorImageScaling() {
+    const editor = document.getElementById('bodyEditor');
+    editor.querySelectorAll('img').forEach(img => {
+      if (img.dataset.scaleBound) return;
+      img.dataset.scaleBound = '1';
+      img.addEventListener('click', e => {
+        e.preventDefault();
+        e.stopPropagation();
+        // Deselect all others
+        editor.querySelectorAll('img.img-selected').forEach(i => {
+          i.classList.remove('img-selected');
+          hideEditorScaleBar(i);
+        });
+        img.classList.add('img-selected');
+        showEditorScaleBar(img);
+      });
+    });
+    // Click outside deselects
+    editor.addEventListener('click', e => {
+      if (e.target.closest('.img-scale-bar')) return;
+      if (e.target.tagName !== 'IMG') {
+        editor.querySelectorAll('img.img-selected').forEach(i => {
+          i.classList.remove('img-selected');
+          hideEditorScaleBar(i);
+        });
+      }
+    }, true);
+  }
+
+  function showEditorScaleBar(img) {
+    if (img.parentElement && img.parentElement.classList.contains('img-scale-wrap')) return;
+    const wrap = document.createElement('span');
+    wrap.className = 'img-scale-wrap active';
+    wrap.style.cssText = 'display:block;position:relative;margin:8px 0';
+    img.parentNode.insertBefore(wrap, img);
+    wrap.appendChild(img);
+
+    const pct = getImgCurrentPct(img);
+    const bar = document.createElement('div');
+    bar.className = 'img-scale-bar';
+    bar.addEventListener('click', e => {
+      e.preventDefault();
+      e.stopPropagation();
+    });
+    bar.innerHTML = `
+      <button class="img-scale-btn" onclick="scaleEditorImg(this,-1)">←</button>
+      <span class="img-scale-pct">${pct}%</span>
+      <button class="img-scale-btn" onclick="scaleEditorImg(this,1)">→</button>`;
+    wrap.appendChild(bar);
+  }
+
+  function hideEditorScaleBar(img) {
+    const wrap = img.parentElement;
+    if (wrap && wrap.classList.contains('img-scale-wrap')) {
+      wrap.parentNode.insertBefore(img, wrap);
+      wrap.remove();
+    }
+  }
+
+  function scaleEditorImg(btn, dir) {
+    const wrap = btn.closest('.img-scale-wrap');
+    if (!wrap) return;
+    const img = wrap.querySelector('img');
+    const pct = getImgCurrentPct(img);
+    let idx = getNearestStepIdx(pct);
+    idx = Math.max(0, Math.min(SCALE_STEPS.length - 1, idx + dir));
+    const newPct = SCALE_STEPS[idx];
+    img.style.width = newPct + '%';
+    img.style.maxWidth = 'none';
+    wrap.querySelector('.img-scale-pct').textContent = newPct + '%';
+    updatePreview();
+  }
+
+  // Preview body images
+  function wrapImagesInPreview() {
+    const body = document.getElementById('previewBody');
+    if (!body) return;
+    body.querySelectorAll('img').forEach(img => {
+      if (img.parentElement && img.parentElement.classList.contains('img-scale-wrap')) return;
+      const wrap = document.createElement('span');
+      wrap.className = 'img-scale-wrap';
+      wrap.style.cssText = 'display:block;position:relative;margin:8px 0';
+      img.parentNode.insertBefore(wrap, img);
+      wrap.appendChild(img);
+      const pct = getImgCurrentPct(img);
+      const bar = document.createElement('div');
+      bar.className = 'img-scale-bar';
+      bar.innerHTML = `
+        <button class="img-scale-btn" onclick="scalePreviewBodyImg(this,-1)">←</button>
+        <span class="img-scale-pct">${pct}%</span>
+        <button class="img-scale-btn" onclick="scalePreviewBodyImg(this,1)">→</button>`;
+      wrap.appendChild(bar);
+    });
+  }
+
+  function scalePreviewBodyImg(btn, dir) {
+    const wrap = btn.closest('.img-scale-wrap');
+    const img = wrap.querySelector('img');
+    const pct = getImgCurrentPct(img);
+    let idx = getNearestStepIdx(pct);
+    idx = Math.max(0, Math.min(SCALE_STEPS.length - 1, idx + dir));
+    const newPct = SCALE_STEPS[idx];
+    img.style.width = newPct + '%';
+    img.style.maxWidth = 'none';
+    wrap.querySelector('.img-scale-pct').textContent = newPct + '%';
+    // Write scale back into editor img
+    syncPreviewScaleToEditor(img.src, newPct);
+  }
+
+  function syncPreviewScaleToEditor(src, pct) {
+    const editor = document.getElementById('bodyEditor');
+    // Match by filename since paths may differ
+    const fname = src.split('/').pop().split('?')[0];
+    editor.querySelectorAll('img').forEach(img => {
+      if (img.src.split('/').pop().split('?')[0] === fname) {
+        img.style.width = pct + '%';
+        img.style.maxWidth = 'none';
+        // Update its scale bar label if open
+        const wrap = img.parentElement;
+        if (wrap && wrap.classList.contains('img-scale-wrap')) {
+          wrap.querySelector('.img-scale-pct').textContent = pct + '%';
+        }
+      }
+    });
+    updatePreview();
+  }
+
+  // Preview header thumbnail scale
+  const THUMB_MODES = ['cover','contain'];
+  function applyPreviewThumbScale() {
+    const mode = THUMB_MODES[previewThumbModeIdx];
+    const img = document.getElementById('previewThumbImg');
+    const lbl = document.getElementById('previewThumbPct');
+    if (!img || !lbl) return;
+    if (mode === 'cover') {
+      img.style.objectFit = 'cover';
+      img.style.width = '100%';
+      img.style.height = '100%';
+      img.style.maxWidth = 'none';
+    } else if (mode === 'contain') {
+      img.style.objectFit = 'contain';
+      img.style.width = '100%';
+      img.style.height = '100%';
+      img.style.maxWidth = 'none';
+    }
+    lbl.textContent = mode;
+  }
+  function scalePreviewThumb(dir) {
+    previewThumbModeIdx += dir;
+    if (previewThumbModeIdx < 0) previewThumbModeIdx = THUMB_MODES.length - 1;
+    if (previewThumbModeIdx >= THUMB_MODES.length) previewThumbModeIdx = 0;
+    applyPreviewThumbScale();
+  }
+
+  // Hook into editor mutations to re-init scaling on new images
+  (function() {
+    const editor = document.getElementById('bodyEditor');
+    const obs = new MutationObserver(() => initEditorImageScaling());
+    obs.observe(editor, { childList: true, subtree: true });
+  })();
 
   function hasUnsavedChanges() {
     const title = document.getElementById('fTitle').value.trim();
