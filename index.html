@@ -45,7 +45,7 @@
 
   /* HERO */
   .hero{position:relative;width:100%;height:auto;padding:120px 0 0;display:flex;flex-direction:column;justify-content:flex-end;overflow:hidden}
-  .hero-bg{position:absolute;inset:0;background-image:url('images/blackhole.gif');background-size:96% auto;background-position:82% center;background-repeat:no-repeat;animation:heroZoom 16s ease-out forwards;filter:saturate(1.08) contrast(1.04)}
+  .hero-bg{position:absolute;inset:0;background-image:url('images/blackhole.gif');background-size:96% auto;background-position:left center;background-repeat:no-repeat;animation:heroZoom 16s ease-out forwards;filter:saturate(1.08) contrast(1.04)}
   @keyframes heroZoom{from{transform:scale(1.01)}to{transform:scale(.97)}}
   .hero-bg::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 76% 46%,rgba(224,28,28,.14) 0%,rgba(224,28,28,.06) 18%,transparent 50%)}
   .hero-bg::after{content:'';position:absolute;inset:0;background:linear-gradient(90deg,rgba(5,5,7,.93) 0%,rgba(5,5,7,.86) 24%,rgba(5,5,7,.6) 46%,rgba(5,5,7,.26) 66%,rgba(5,5,7,.08) 82%,rgba(5,5,7,.12) 100%),linear-gradient(to top,rgba(5,5,7,.94) 0%,rgba(5,5,7,.46) 28%,rgba(5,5,7,.06) 62%)}
@@ -285,6 +285,7 @@
     .slideshow.is-fullscreen .slide-arrow.prev{left:12px}
     .slideshow.is-fullscreen .slide-arrow.next{right:12px}
     .slideshow.is-fullscreen .slide-nav{bottom:16px}
+    .hero-bg{background-size:auto 100%;background-position:12% center}
   }
   @media(max-width:560px){
     nav{padding:12px 16px;align-items:flex-start}
@@ -292,6 +293,7 @@
     .nav-links{gap:10px 12px;max-width:62%;padding-top:2px}
     .nav-links a{font-size:.52rem;letter-spacing:.1em}
     .media-section{padding-left:16px;padding-right:16px}
+    .hero-bg{background-size:auto 100%;background-position:8% center}
     .rewards-grid{grid-template-columns:1fr}
     .hero-title{font-size:clamp(3.2rem,13vw,5rem)}
     .funded-strip{height:auto;padding:16px 24px;flex-wrap:wrap;gap:12px}
