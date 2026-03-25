@@ -157,11 +157,18 @@
     .post-share{right:62px}
     footer{padding:28px 24px}
   }
+  @media(max-width:900px) and (orientation:landscape){
+    .page-header,.nl-band,.posts-feed,.back-row,footer{padding-left:36px;padding-right:36px}
+  }
   @media(max-width:560px){
     nav{padding:12px 16px;align-items:flex-start}
     .nav-studio{font-size:.76rem;letter-spacing:.06em}
     .nav-links{gap:10px 12px;max-width:62%;padding-top:2px}
     .nav-links a{font-size:.52rem;letter-spacing:.1em}
+    .post-item.expanded{display:grid}
+    .post-item.expanded .post-header{order:1}
+    .post-item.expanded .post-share{position:static;order:2;justify-self:start;margin:0 20px 14px;padding:5px 10px;border-color:var(--border);background:rgba(5,5,7,.92)}
+    .post-item.expanded .post-body{order:3}
     .nl-form{flex-direction:row;align-items:stretch}
     .nl-input{width:min(100%,220px);border-right:none;flex:1 1 0}
     .nl-btn{clip-path:polygon(0 0,calc(100% - 8px) 0,100% 8px,100% 100%,8px 100%,0 calc(100% - 8px));flex:0 0 auto}
