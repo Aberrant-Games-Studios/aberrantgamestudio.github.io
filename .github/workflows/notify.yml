@@ -54,7 +54,14 @@ jobs:
           payload = json.dumps({'username': 'ORDER // ONE', 'embeds': [embed]}).encode()
 
           webhook = os.environ['DISCORD_WEBHOOK']
-          req = urllib.request.Request(webhook, data=payload, headers={'Content-Type': 'application/json'})
+          
+          # Added User-Agent to bypass Discord/Cloudflare blocking
+          headers = {
+              'Content-Type': 'application/json',
+              'User-Agent': 'AberrantGamesWebhook/1.0'
+          }
+          
+          req = urllib.request.Request(webhook, data=payload, headers=headers)
           with urllib.request.urlopen(req) as res:
             print(f"Discord responded: {res.status}")
           PYEOF
