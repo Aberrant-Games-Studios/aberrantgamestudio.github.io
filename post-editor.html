@@ -19,12 +19,7 @@
   body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.04) 2px,rgba(0,0,0,0.04) 4px)}
   ::-webkit-scrollbar{width:3px}::-webkit-scrollbar-track{background:var(--bg)}::-webkit-scrollbar-thumb{background:var(--red)}
 
-  /* NAV */
-  .top-bar{position:sticky;top:0;z-index:100;background:rgba(5,5,7,.97);border-bottom:1px solid var(--border);padding:14px 48px;display:flex;align-items:center;justify-content:space-between;gap:20px}
-  .top-bar-left{display:flex;align-items:center;gap:16px}
-  .top-eyebrow{font-family:var(--fm);font-size:.58rem;letter-spacing:.32em;color:var(--red);text-transform:uppercase}
-  .top-title{font-family:var(--fd);font-size:1.6rem;letter-spacing:.08em;color:var(--white)}
-  .top-bar-right{display:flex;gap:10px;align-items:center}
+
 
   /* BUTTONS */
   .btn{display:inline-flex;align-items:center;gap:8px;padding:10px 22px;font-family:var(--fm);font-size:.68rem;letter-spacing:.18em;text-transform:uppercase;border:none;cursor:pointer;transition:all .2s;clip-path:polygon(0 0,calc(100% - 8px) 0,100% 8px,100% 100%,8px 100%,0 calc(100% - 8px));white-space:nowrap}
@@ -40,8 +35,8 @@
   .btn:disabled{opacity:.4;pointer-events:none}
 
   /* LAYOUT */
-  .workspace{display:grid;grid-template-columns:1fr 1fr;gap:0;min-height:calc(100vh - 57px)}
-  .panel{padding:36px 48px;overflow-y:auto;max-height:calc(100vh - 57px)}
+  .workspace{display:grid;grid-template-columns:1fr 1fr;gap:0;min-height:100vh}
+  .panel{padding:36px 48px;overflow-y:auto;max-height:100vh}
   .panel-form{background:var(--surface);border-right:1px solid var(--border)}
   .panel-preview{background:var(--bg)}
 
@@ -158,43 +153,44 @@
     .workspace{grid-template-columns:1fr}
     .panel{max-height:none;padding:24px 20px}
     .panel-form{border-right:none;border-bottom:1px solid var(--border)}
-    .top-bar{padding:12px 20px}
   }
 </style>
 </head>
 <body autocomplete="off">
 
-<!-- TOP BAR -->
-<div class="top-bar">
-  <div class="top-bar-left">
-    <div>
-      <div class="top-eyebrow">Aberrant Games · Internal Tool</div>
-      <div class="top-title">POST EDITOR</div>
+<input type="file" id="fileInput" accept=".json" onchange="loadFile(event)"/>
+
+<!-- FULLSCREEN LOAD OVERLAY -->
+<div id="loadOverlay" style="position:fixed;inset:0;z-index:500;display:flex;background:var(--bg);">
+  <!-- Left: drop zone (takes full screen, stays left) -->
+  <div id="overlayDropZone" style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;border-right:1px solid var(--border);position:relative;transition:background .2s" onclick="triggerFileLoad()">
+    <div style="position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.04) 2px,rgba(0,0,0,0.04) 4px)"></div>
+    <div style="position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;gap:24px;max-width:480px;padding:40px;text-align:center;">
+      <div style="font-family:var(--fd);font-size:4rem;letter-spacing:.1em;color:var(--red);text-shadow:0 0 60px rgba(224,28,28,.3);line-height:1">ORDER // ONE</div>
+      <div style="font-family:var(--fm);font-size:.56rem;letter-spacing:.38em;color:var(--dim);text-transform:uppercase">Aberrant Games · Post Editor</div>
+      <div style="width:48px;height:1px;background:var(--border)"></div>
+      <div id="overlayDropIcon" style="width:80px;height:80px;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;transition:border-color .2s,background .2s">
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="rgba(224,28,28,0.7)" stroke-width="1.5" stroke-linecap="square">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+          <polyline points="14 2 14 8 20 8"/>
+          <line x1="12" y1="18" x2="12" y2="12"/>
+          <polyline points="9 15 12 12 15 15"/>
+        </svg>
+      </div>
+      <div>
+        <div style="font-family:var(--fd);font-size:1.6rem;letter-spacing:.1em;color:var(--white);margin-bottom:8px">LOAD NEWS.JSON</div>
+        <div style="font-family:var(--fm);font-size:.6rem;letter-spacing:.2em;color:var(--dim);text-transform:uppercase;line-height:1.8">Click anywhere or drag &amp; drop<br>your news.json file to begin</div>
+      </div>
+      <div id="overlayStatus" style="font-family:var(--fm);font-size:.58rem;letter-spacing:.18em;color:var(--dim);text-transform:uppercase;min-height:18px"></div>
     </div>
-  </div>
-  <div class="top-bar-right">
-    <button class="btn btn-ghost btn-sm" onclick="triggerFileLoad()">📂 Load news.json</button>
   </div>
 </div>
 
-<input type="file" id="fileInput" accept=".json" onchange="loadFile(event)"/>
-
-<div class="workspace">
+<div class="workspace" id="mainWorkspace" style="display:none;">
   <!-- FORM PANEL -->
   <div class="panel panel-form">
     <div class="panel-heading">Compose Post</div>
     <div class="panel-sub">Fill in the fields below · Preview updates live</div>
-
-    <!-- FILE LOADER -->
-    <div class="file-loader" onclick="triggerFileLoad()" id="fileLoaderZone">
-      <div class="file-loader-text">
-        <strong>Load your existing news.json</strong><br>
-        Click here or drag &amp; drop to load current posts
-      </div>
-    </div>
-    <div class="status-bar info" id="loadStatus" style="display:none"></div>
-
-    <div class="divider"></div>
 
     <!-- FORM FIELDS -->
     <div class="field">
@@ -271,7 +267,6 @@
     <div style="display:flex;gap:10px;margin-top:20px;flex-wrap:wrap;align-items:center">
       <button class="btn btn-primary" onclick="savePost()" id="saveBtn2">Add Post →</button>
       <button class="btn btn-primary" onclick="downloadJson()" id="downloadBtn" style="display:none">⬇ Download news.json</button>
-      <button class="btn btn-ghost" onclick="resetForm()" id="cancelBtn" style="display:none">Cancel Edit</button>
     </div>
 
     <!-- EXISTING POSTS -->
@@ -279,6 +274,7 @@
       <div class="posts-heading">
         <span id="postsHeadingText">Loaded Posts</span>
       </div>
+      <button class="btn btn-secondary" id="newPostBtn" onclick="newPostWithWarning()" style="width:100%;margin-bottom:12px">+ New Post</button>
       <div id="postsList"></div>
     </div>
 
@@ -323,7 +319,7 @@
   }
 
   function loadFile(e) {
-    const file = e.target.files[0];
+    const file = e.target.files ? e.target.files[0] : e;
     if (!file) return;
     const reader = new FileReader();
     reader.onload = function(ev) {
@@ -331,33 +327,48 @@
         const data = JSON.parse(ev.target.result);
         if (!Array.isArray(data)) throw new Error('Expected a JSON array');
         posts = data;
-        showStatus('loadStatus', `✓ Loaded ${posts.length} post${posts.length!==1?'s':''} from ${file.name}`, 'ok');
         renderPostsList();
         document.getElementById('postsSection').style.display = 'block';
-        document.getElementById('fileLoaderZone').style.borderColor = 'rgba(29,185,84,.4)';
-        document.getElementById('fileLoaderZone').querySelector('.file-loader-text').innerHTML =
-          `<strong style="color:var(--green)">✓ ${file.name} loaded</strong><br><span style="color:var(--dim)">Click to load a different file</span>`;
+        // Dismiss overlay, show workspace
+        document.getElementById('loadOverlay').style.display = 'none';
+        document.getElementById('mainWorkspace').style.display = 'grid';
       } catch(err) {
-        showStatus('loadStatus', '✗ Error: ' + err.message, 'err');
+        const st = document.getElementById('overlayStatus');
+        st.textContent = '✗ ' + err.message;
+        st.style.color = 'var(--red)';
       }
     };
     reader.readAsText(file);
-    e.target.value = '';
+    if (e.target && e.target.value !== undefined) e.target.value = '';
   }
 
-  // Drag and drop on file loader zone
-  const zone = document.getElementById('fileLoaderZone');
-  zone.addEventListener('dragover', e => { e.preventDefault(); zone.style.borderColor = 'var(--red)'; });
-  zone.addEventListener('dragleave', () => { zone.style.borderColor = 'rgba(224,28,28,.3)'; });
-  zone.addEventListener('drop', e => {
+  // Drag and drop on the overlay
+  const overlay = document.getElementById('loadOverlay');
+  const overlayDrop = document.getElementById('overlayDropZone');
+  const overlayIcon = document.getElementById('overlayDropIcon');
+  overlay.addEventListener('dragover', e => {
     e.preventDefault();
-    zone.style.borderColor = 'rgba(224,28,28,.3)';
+    overlayDrop.style.background = 'rgba(224,28,28,.05)';
+    overlayIcon.style.borderColor = 'var(--red)';
+    overlayIcon.style.background = 'rgba(224,28,28,.08)';
+  });
+  overlay.addEventListener('dragleave', () => {
+    overlayDrop.style.background = '';
+    overlayIcon.style.borderColor = 'var(--border)';
+    overlayIcon.style.background = '';
+  });
+  overlay.addEventListener('drop', e => {
+    e.preventDefault();
+    overlayDrop.style.background = '';
+    overlayIcon.style.borderColor = 'var(--border)';
+    overlayIcon.style.background = '';
     const file = e.dataTransfer.files[0];
     if (file && file.name.endsWith('.json')) {
-      const dt = new DataTransfer();
-      dt.items.add(file);
-      document.getElementById('fileInput').files = dt.files;
-      loadFile({ target: { files: [file] } });
+      loadFile(file);
+    } else {
+      const st = document.getElementById('overlayStatus');
+      st.textContent = '✗ Drop a .json file';
+      st.style.color = 'var(--red)';
     }
   });
 
@@ -590,8 +601,7 @@
       // Switch into edit mode on the newly created post
       editingId = entry.id;
       document.getElementById('saveBtn2').textContent = 'Save Changes →';
-      document.getElementById('cancelBtn').style.display = 'inline-flex';
-      showStatus('formStatus', `✓ Post added: "${entry.title}" · Keep editing or download when done`, 'ok');
+        showStatus('formStatus', `✓ Post added: "${entry.title}" · Keep editing or download when done`, 'ok');
     }
 
     document.getElementById('downloadBtn').style.display = 'inline-flex';
@@ -626,7 +636,6 @@
 
     editingId = id;
     document.getElementById('saveBtn2').textContent = 'Save Changes →';
-    document.getElementById('cancelBtn').style.display = 'inline-flex';
     document.getElementById('idPreview').innerHTML = `URL anchor: <span>#${p.id}</span>`;
 
     updatePreview();
@@ -667,7 +676,6 @@
     }
 
     document.getElementById('saveBtn2').textContent = 'Add Post →';
-    document.getElementById('cancelBtn').style.display = 'none';
     document.getElementById('downloadBtn').style.display = posts.length ? 'inline-flex' : 'none';
     document.getElementById('formStatus').className = 'status-bar';
 
@@ -728,6 +736,21 @@
       btn.textContent = '✓ Copied';
       setTimeout(() => btn.textContent = 'Copy', 1500);
     });
+  }
+
+  function hasUnsavedChanges() {
+    const title = document.getElementById('fTitle').value.trim();
+    const blurb = document.getElementById('fBlurb').value.trim();
+    const body  = getBodyHtml().trim();
+    return title !== '' || blurb !== '' || (body !== '' && body !== '<br>');
+  }
+
+  function newPostWithWarning() {
+    if (hasUnsavedChanges()) {
+      if (!confirm('Clear the form and start a new post?\nAny unsaved changes will be lost.')) return;
+    }
+    resetForm();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
   // Init
