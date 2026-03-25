@@ -38,20 +38,20 @@
   /* NAV */
   nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;gap:18px;padding:16px 56px;background:linear-gradient(to bottom,rgba(5,5,7,.97) 60%,transparent);transition:opacity .35s,transform .35s}
   .nav-logo{display:flex;align-items:center;gap:11px;text-decoration:none}
-  .nav-logo img{height:44px;width:44px;object-fit:contain}
-  .nav-studio{font-family:var(--fd);font-size:1rem;letter-spacing:.12em;color:var(--white)}
+  .nav-logo img{height:50px;width:50px;object-fit:contain}
+  .nav-studio{font-family:var(--fd);font-size:1.1rem;letter-spacing:.12em;color:var(--white)}
   .nav-links{display:flex;gap:32px;list-style:none;flex-wrap:wrap;justify-content:flex-end}
-  .nav-links a{font-family:var(--fm);font-size:.66rem;letter-spacing:.22em;color:var(--dim);text-decoration:none;text-transform:uppercase;transition:color .18s}
+  .nav-links a{font-family:var(--fm);font-size:.82rem;letter-spacing:.18em;color:var(--dim);text-decoration:none;text-transform:uppercase;transition:color .18s}
   .nav-links a:hover,.nav-links a.active{color:var(--red)}
 
   /* PAGE HEADER */
-  .page-header{padding:120px 64px 56px;border-bottom:1px solid var(--border);position:relative;overflow:hidden}
+  .page-header{padding:120px 64px 72px;border-bottom:1px solid var(--border);position:relative;overflow:hidden}
   .page-header::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 15% 60%,rgba(224,28,28,.07) 0%,transparent 65%);pointer-events:none}
-  .page-eyebrow{font-family:var(--fm);font-size:.6rem;letter-spacing:.38em;color:var(--red);text-transform:uppercase;margin-bottom:10px;display:flex;align-items:center;gap:10px}
+  .page-eyebrow{font-family:var(--fm);font-size:.66rem;letter-spacing:.38em;color:var(--red);text-transform:uppercase;margin-bottom:12px;display:flex;align-items:center;gap:10px}
   .page-eyebrow::before{content:'';width:24px;height:1px;background:var(--red)}
-  .page-title{font-family:var(--fd);font-size:clamp(3rem,6vw,6rem);line-height:.9;letter-spacing:.04em;color:var(--white)}
+  .page-title{font-family:var(--fd);font-size:clamp(2.8rem,5.6vw,4.8rem);line-height:.9;letter-spacing:.04em;color:var(--white)}
   .page-title .sl{color:var(--red);text-shadow:0 0 40px rgba(224,28,28,.7)}
-  .page-sub{font-family:var(--fb);font-weight:300;font-style:italic;font-size:1rem;color:var(--dim);margin-top:14px;letter-spacing:.04em}
+  .page-sub{font-family:var(--fb);font-weight:300;font-style:italic;font-size:1.1rem;color:var(--dim);margin-top:6px;letter-spacing:.05em}
 
   /* NEWSLETTER BAND */
   .nl-band{padding:36px 64px;background:var(--surface);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:32px;flex-wrap:wrap;position:relative;overflow:hidden}
@@ -101,9 +101,9 @@
   .post-item.expanded .post-toggle svg{transform:rotate(45deg);stroke:var(--red)}
 
   /* SHARE BUTTON */
-  .post-share{position:absolute;top:24px;right:72px;font-family:var(--fm);font-size:.52rem;letter-spacing:.2em;text-transform:uppercase;color:var(--dim);background:transparent;border:1px solid transparent;padding:6px 12px;cursor:pointer;transition:all .18s;opacity:0;pointer-events:none}
+  .post-share{position:absolute;top:24px;right:72px;font-family:var(--fm);font-size:.52rem;letter-spacing:.2em;text-transform:uppercase;color:var(--dim);background:rgba(5,5,7,.92);border:1px solid rgba(224,28,28,.28);padding:6px 12px;cursor:pointer;transition:all .18s;opacity:0;pointer-events:none}
   .post-item.expanded .post-share{opacity:1;pointer-events:all}
-  .post-share:hover{border-color:var(--border);color:var(--white)}
+  .post-share:hover{border-color:rgba(224,28,28,.5);color:var(--white);background:rgba(224,28,28,.08)}
   .post-share.copied{color:var(--green);border-color:rgba(29,185,84,.4)}
 
   /* POST BODY — shown when expanded */
@@ -143,11 +143,11 @@
   @media(max-width:900px){
     nav{padding:14px 24px;gap:12px}
     .nav-logo{gap:8px}
-    .nav-logo img{height:36px;width:36px}
-    .nav-studio{font-size:.88rem;letter-spacing:.08em}
+    .nav-logo img{height:40px;width:40px}
+    .nav-studio{font-size:.96rem;letter-spacing:.08em}
     .nav-links{gap:14px}
-    .nav-links a{font-size:.58rem;letter-spacing:.14em}
-    .page-header{padding:100px 24px 40px}
+    .nav-links a{font-size:.7rem;letter-spacing:.11em}
+    .page-header{padding:100px 28px 56px}
     .nl-band{padding:28px 24px}
     .nl-input{width:200px}
     .posts-feed{padding:40px 24px 60px}
@@ -162,9 +162,9 @@
   }
   @media(max-width:560px){
     nav{padding:12px 16px;align-items:flex-start}
-    .nav-studio{font-size:.76rem;letter-spacing:.06em}
+    .nav-studio{font-size:.82rem;letter-spacing:.06em}
     .nav-links{gap:10px 12px;max-width:62%;padding-top:2px}
-    .nav-links a{font-size:.52rem;letter-spacing:.1em}
+    .nav-links a{font-size:.6rem;letter-spacing:.07em}
     .post-item.expanded{display:grid}
     .post-item.expanded .post-header{order:1}
     .post-item.expanded .post-share{position:static;order:2;justify-self:start;margin:0 20px 14px;padding:5px 10px;border-color:var(--border);background:rgba(5,5,7,.92)}
@@ -194,8 +194,8 @@
 <!-- PAGE HEADER -->
 <div class="page-header">
   <div class="page-eyebrow">Aberrant Games · Dev Updates</div>
-  <h1 class="page-title">DISPATCH<span class="sl">//</span>LOG</h1>
-  <p class="page-sub">Dev logs, announcements, and everything in between.</p>
+  <h1 class="page-title">NEWSLETTER</h1>
+  <p class="page-sub">Lastest news from our development team</p>
 </div>
 
 <!-- POSTS FEED -->
@@ -441,8 +441,7 @@
     } catch (err) {
       const isLocal = location.protocol === 'file:';
       feed.innerHTML = `<div class="empty-state">${isLocal
-        ? 'Open this page via a local server — run <code style="color:var(--red)">python -m http.server</code> in your site folder, then visit localhost:8000'
-        : 'Could not load updates. Please try again.'
+        'Could not load updates. Please try again.'
       }</div>`;
       console.error(err);
     }
