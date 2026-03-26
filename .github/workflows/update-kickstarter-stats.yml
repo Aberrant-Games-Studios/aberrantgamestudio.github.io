@@ -17,7 +17,7 @@ jobs:
       - name: Fetch Kickstarter stats
         run: |
           python3 - <<'PYEOF'
-          import json, re, urllib.request
+          import json, os, re, urllib.request
           from datetime import datetime, timezone
 
           url = 'https://www.kickstarter.com/projects/aberrantgames/order-one'
@@ -51,6 +51,24 @@ jobs:
               'currencyTrailingCode': bool(project.get('currency_trailing_code', True)),
               'updatedAt': datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace('+00:00', 'Z')
           }
+
+          existing = None
+          if os.path.exists('kickstarter-stats.json'):
+              with open('kickstarter-stats.json', 'r', encoding='utf-8') as f:
+                  existing = json.load(f)
+
+          comparable_keys = [
+              'pledged',
+              'goal',
+              'backers',
+              'percentRaised',
+              'currency',
+              'currencySymbol',
+              'currencyTrailingCode'
+          ]
+
+          if existing and all(existing.get(k) == stats.get(k) for k in comparable_keys):
+              stats['updatedAt'] = existing.get('updatedAt', stats['updatedAt'])
 
           with open('kickstarter-stats.json', 'w', encoding='utf-8') as f:
               json.dump(stats, f, indent=2)
