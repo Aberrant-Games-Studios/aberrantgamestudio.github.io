@@ -73,6 +73,11 @@
 
   /* FUNDED STRIP */
   .funded-strip{position:relative;z-index:2;border-top:1px solid var(--border);border-bottom:1px solid var(--border);background:linear-gradient(90deg,transparent,rgba(224,28,28,.05) 30%,rgba(224,28,28,.05) 70%,transparent);padding:0 64px;height:72px;display:flex;align-items:center}
+  .funded-strip.is-pending{opacity:0}
+  .funded-strip.is-ready{opacity:1;transition:opacity .18s ease}
+  .funded-strip.is-error .fstat-num{color:var(--dim);text-shadow:none}
+  .funded-strip.is-error .funded-badge{color:var(--dim)}
+  .funded-strip.is-error .funded-badge::before{background:var(--dim);box-shadow:none}
   .funded-strip::before{content:'';position:absolute;left:0;right:0;top:0;bottom:0;background:linear-gradient(90deg,var(--bg) 0%,transparent 5%,transparent 95%,var(--bg) 100%);pointer-events:none}
   .fstat{display:flex;flex-direction:column;align-items:center;flex:1;position:relative;z-index:1}
   .fstat+.fstat{border-left:1px solid var(--border)}
@@ -361,11 +366,11 @@
 </section>
 
 <!-- FUNDED STRIP -->
-<div class="funded-strip">
-  <div class="fstat"><span class="fstat-num" id="pledgedAmount">CA$13,764</span><span class="fstat-label">Pledged</span></div>
-  <div class="fstat"><span class="fstat-num" id="fundedPercent">138%</span><span class="fstat-label">Funded</span></div>
-  <div class="fstat"><span class="fstat-num" id="backerCount">114</span><span class="fstat-label">Backers</span></div>
-  <div class="funded-badge">Successfully Funded · March 2, 2026</div>
+<div class="funded-strip is-pending" id="fundedStrip">
+  <div class="fstat"><span class="fstat-num" id="pledgedAmount">...</span><span class="fstat-label">Pledged</span></div>
+  <div class="fstat"><span class="fstat-num" id="fundedPercent">...</span><span class="fstat-label">Funded</span></div>
+  <div class="fstat"><span class="fstat-num" id="backerCount">...</span><span class="fstat-label">Backers</span></div>
+  <div class="funded-badge" id="fundedBadge">Successfully Funded · March 2, 2026</div>
 </div>
 
 <!-- LATEST UPDATE BAND -->
@@ -821,10 +826,12 @@
 
   // KICKSTARTER FUNDED STRIP
   (async function(){
+    const stripEl=document.getElementById('fundedStrip');
     const pledgedEl=document.getElementById('pledgedAmount');
     const percentEl=document.getElementById('fundedPercent');
     const backersEl=document.getElementById('backerCount');
-    if(!pledgedEl||!percentEl||!backersEl) return;
+    const badgeEl=document.getElementById('fundedBadge');
+    if(!stripEl||!pledgedEl||!percentEl||!backersEl||!badgeEl) return;
     try{
       const res=await fetch('./kickstarter-stats.json',{cache:'no-store'});
       if(!res.ok) throw new Error(`HTTP ${res.status}`);
@@ -841,8 +848,17 @@
       pledgedEl.textContent=trailingCode?`${currencyCode}${symbol}${pledgedNumber}`:`${symbol}${pledgedNumber}`;
       percentEl.textContent=`${percent}%`;
       backersEl.textContent=Number(stats.backers||0).toLocaleString('en-CA');
+      stripEl.classList.remove('is-error');
     }catch(e){
       console.warn('Could not load Kickstarter stats.',e);
+      pledgedEl.textContent='--';
+      percentEl.textContent='--';
+      backersEl.textContent='--';
+      badgeEl.textContent='Live Kickstarter stats unavailable';
+      stripEl.classList.add('is-error');
+    }finally{
+      stripEl.classList.remove('is-pending');
+      stripEl.classList.add('is-ready');
     }
   })();
 
