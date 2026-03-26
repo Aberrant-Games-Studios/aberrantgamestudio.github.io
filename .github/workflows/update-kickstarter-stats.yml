@@ -1,0 +1,72 @@
+name: Update Kickstarter Stats
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '17 */3 * * *'
+
+jobs:
+  update-kickstarter-stats:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Fetch Kickstarter stats
+        run: |
+          python3 - <<'PYEOF'
+          import json, re, urllib.request
+          from datetime import datetime, timezone
+
+          url = 'https://www.kickstarter.com/projects/aberrantgames/order-one'
+          headers = {
+              'User-Agent': 'Mozilla/5.0 (compatible; AberrantGamesStatsBot/1.0; +https://www.aberrantgamestudio.com)'
+          }
+          req = urllib.request.Request(url, headers=headers)
+          html = urllib.request.urlopen(req, timeout=30).read().decode('utf-8', errors='ignore')
+
+          match = re.search(r'window\.current_project = "({.+?})";', html)
+          if not match:
+              raise RuntimeError('Could not find window.current_project payload on Kickstarter page.')
+
+          payload = match.group(1)
+          payload = bytes(payload, 'utf-8').decode('unicode_escape')
+          payload = payload.replace('&quot;', '"').replace('&amp;', '&')
+          project = json.loads(payload)
+
+          pledged = float(project['pledged'])
+          goal = float(project['goal'])
+          backers = int(project['backers_count'])
+          percent = int((pledged / goal) * 100) if goal else 0
+
+          stats = {
+              'pledged': int(round(pledged)),
+              'goal': int(round(goal)),
+              'backers': backers,
+              'percentRaised': percent,
+              'currency': project.get('currency', 'CAD'),
+              'currencySymbol': project.get('currency_symbol', '$'),
+              'currencyTrailingCode': bool(project.get('currency_trailing_code', True)),
+              'updatedAt': datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace('+00:00', 'Z')
+          }
+
+          with open('kickstarter-stats.json', 'w', encoding='utf-8') as f:
+              json.dump(stats, f, indent=2)
+              f.write('\n')
+
+          print(json.dumps(stats, indent=2))
+          PYEOF
+
+      - name: Commit updated stats
+        run: |
+          if git diff --quiet -- kickstarter-stats.json; then
+            echo "No Kickstarter stat changes."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add kickstarter-stats.json
+          git commit -m "Update Kickstarter stats"
+          git push

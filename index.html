@@ -362,9 +362,9 @@
 
 <!-- FUNDED STRIP -->
 <div class="funded-strip">
-  <div class="fstat"><span class="fstat-num">CA$13,750</span><span class="fstat-label">Pledged</span></div>
-  <div class="fstat"><span class="fstat-num">137%</span><span class="fstat-label">Funded</span></div>
-  <div class="fstat"><span class="fstat-num">113</span><span class="fstat-label">Backers</span></div>
+  <div class="fstat"><span class="fstat-num" id="pledgedAmount">CA$13,764</span><span class="fstat-label">Pledged</span></div>
+  <div class="fstat"><span class="fstat-num" id="fundedPercent">138%</span><span class="fstat-label">Funded</span></div>
+  <div class="fstat"><span class="fstat-num" id="backerCount">114</span><span class="fstat-label">Backers</span></div>
   <div class="funded-badge">Successfully Funded · March 2, 2026</div>
 </div>
 
@@ -818,6 +818,33 @@
   window.addEventListener('load',updateActiveNavLink);
   window.addEventListener('resize',updateActiveNavLink);
   updateActiveNavLink();
+
+  // KICKSTARTER FUNDED STRIP
+  (async function(){
+    const pledgedEl=document.getElementById('pledgedAmount');
+    const percentEl=document.getElementById('fundedPercent');
+    const backersEl=document.getElementById('backerCount');
+    if(!pledgedEl||!percentEl||!backersEl) return;
+    try{
+      const res=await fetch('./kickstarter-stats.json',{cache:'no-store'});
+      if(!res.ok) throw new Error(`HTTP ${res.status}`);
+      const stats=await res.json();
+      const pledged=Number(stats.pledged||0);
+      const goal=Number(stats.goal||0);
+      const percent=Number.isFinite(Number(stats.percentRaised))
+        ? Math.floor(Number(stats.percentRaised))
+        : (goal>0?Math.floor((pledged/goal)*100):0);
+      const currencyCode=(stats.currency||'CAD').toUpperCase();
+      const symbol=stats.currencySymbol||'$';
+      const trailingCode=Boolean(stats.currencyTrailingCode);
+      const pledgedNumber=pledged.toLocaleString('en-CA');
+      pledgedEl.textContent=trailingCode?`${currencyCode}${symbol}${pledgedNumber}`:`${symbol}${pledgedNumber}`;
+      percentEl.textContent=`${percent}%`;
+      backersEl.textContent=Number(stats.backers||0).toLocaleString('en-CA');
+    }catch(e){
+      console.warn('Could not load Kickstarter stats.',e);
+    }
+  })();
 
   // LATEST UPDATE BAND
   (async function(){
