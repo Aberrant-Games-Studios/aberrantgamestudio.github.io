@@ -703,69 +703,6 @@
   <div class="footer-copy">© 2026 Aberrant Games Inc. All rights reserved.</div>
 </footer>
 
-<!-- MINI GAME MODAL -->
-<div class="modal-overlay" id="miniGameModal" onclick="handleClick(event,'miniGameModal')">
-  <div class="modal-backdrop"></div>
-  <div class="modal game-modal">
-    <div class="modal-header">
-      <div>
-        <div class="modal-eyebrow">Station Simulation</div>
-        <div class="modal-title">ORDER // ONE: LAST STAND</div>
-      </div>
-      <button class="modal-close" onclick="closeMiniGame()">✕</button>
-    </div>
-    <div class="game-modal-shell">
-      <div class="game-crt-shell">
-        <div class="game-crt">
-          <div class="game-stage" id="miniGameStage">
-            <div class="game-hud" id="miniGameHud">
-              <div class="game-hud-block">
-                <span>Wave</span>
-                <span class="game-hud-value" id="miniGameScore">000</span>
-              </div>
-              <div class="game-hud-block highscore center">
-                <span>Highscore</span>
-                <span class="game-hud-value" id="miniGameHighscore">000</span>
-              </div>
-              <div class="game-hud-block center">
-                <span>Weapon · Ammo</span>
-                <span class="game-hud-value" id="miniGameHudWeapon">Pistol</span>
-              </div>
-              <div class="game-hud-block center">
-                <span>Clone Shells</span>
-                <span class="game-hud-value" id="miniGameHudLives">3/3</span>
-              </div>
-              <div class="game-hud-block right">
-                <span>Health</span>
-                <span class="game-hud-value" id="miniGameHudIntegrity">100</span>
-              </div>
-            </div>
-            <div class="game-stage-center">
-              <div class="game-viewport">
-                <canvas class="game-canvas" id="miniGameCanvas" width="960" height="720"></canvas>
-                <div class="game-overlay" id="miniGameOverlay">
-                  <div class="game-boot">
-                    <div class="game-boot-label" id="miniGameModeLabel">Wave Shooter Prototype</div>
-                    <div class="game-boot-title" id="miniGameStateTitle">Boot Sequence Ready</div>
-                    <div class="game-boot-sub" id="miniGameStateCopy">Survive random arenas, scavenge dropped weapons, and hold out through escalating waves.</div>
-                    <div class="game-stage-actions" id="miniGameActions"></div>
-                  </div>
-                </div>
-                <div class="game-pickup-prompt" id="miniGamePickupPrompt">Press <strong>E</strong> to pick up weapon</div>
-                <div class="game-hud-mut-row" id="miniGameMutRow" style="display:none"></div>
-              </div>
-            </div>
-            <div class="game-footer-bar">
-              <span id="miniGameFooterLeft">Move: WASD / Arrows · Fire: Mouse / Space · Dash: Shift</span>
-              <span id="miniGameFooterRight">Throw: Q · Pickup: E · Pause: P</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
 <!-- FEATURES MODAL -->
 <div class="modal-overlay" id="featuresModal" onclick="handleClick(event,'featuresModal')">
   <div class="modal-backdrop"></div>
@@ -1146,22 +1083,112 @@
   })();
 
   const miniGameHighscoreKey='orderOneMiniGameHighscore';
-  const miniGameCanvas=document.getElementById('miniGameCanvas');
-  const miniGameCtx=miniGameCanvas?.getContext('2d');
-  const miniGameOverlay=document.getElementById('miniGameOverlay');
-  const miniGameStageEl=document.getElementById('miniGameStage');
-  const miniGameHudEl=document.getElementById('miniGameHud');
-  const miniGamePickupPrompt=document.getElementById('miniGamePickupPrompt');
-  const miniGameModeLabelEl=document.getElementById('miniGameModeLabel');
-  const miniGameStateTitleEl=document.getElementById('miniGameStateTitle');
-  const miniGameStateCopyEl=document.getElementById('miniGameStateCopy');
-  const miniGameScoreEl=document.getElementById('miniGameScore');
-  const miniGameHighscoreEl=document.getElementById('miniGameHighscore');
-  const miniGameHudWeaponEl=document.getElementById('miniGameHudWeapon');
-  const miniGameHudAmmoEl=document.getElementById('miniGameHudAmmo');
-  const miniGameHudLivesEl=document.getElementById('miniGameHudLives');
-  const miniGameHudIntegrityEl=document.getElementById('miniGameHudIntegrity');
-  const miniGameUpgradeTrackEl=document.getElementById('miniGameMutRow');
+  const miniGameModalMarkup=`
+<div class="modal-overlay" id="miniGameModal" onclick="handleClick(event,'miniGameModal')">
+  <div class="modal-backdrop"></div>
+  <div class="modal game-modal">
+    <div class="modal-header">
+      <div>
+        <div class="modal-eyebrow">Station Simulation</div>
+        <div class="modal-title">ORDER // ONE: LAST STAND</div>
+      </div>
+      <button class="modal-close" onclick="closeMiniGame()">✕</button>
+    </div>
+    <div class="game-modal-shell">
+      <div class="game-crt-shell">
+        <div class="game-crt">
+          <div class="game-stage" id="miniGameStage">
+            <div class="game-hud" id="miniGameHud">
+              <div class="game-hud-block">
+                <span>Wave</span>
+                <span class="game-hud-value" id="miniGameScore">000</span>
+              </div>
+              <div class="game-hud-block highscore center">
+                <span>Highscore</span>
+                <span class="game-hud-value" id="miniGameHighscore">000</span>
+              </div>
+              <div class="game-hud-block center">
+                <span>Weapon · Ammo</span>
+                <span class="game-hud-value" id="miniGameHudWeapon">Pistol</span>
+              </div>
+              <div class="game-hud-block center">
+                <span>Clone Shells</span>
+                <span class="game-hud-value" id="miniGameHudLives">3/3</span>
+              </div>
+              <div class="game-hud-block right">
+                <span>Health</span>
+                <span class="game-hud-value" id="miniGameHudIntegrity">100</span>
+              </div>
+            </div>
+            <div class="game-stage-center">
+              <div class="game-viewport">
+                <canvas class="game-canvas" id="miniGameCanvas" width="960" height="720"></canvas>
+                <div class="game-overlay" id="miniGameOverlay">
+                  <div class="game-boot">
+                    <div class="game-boot-label" id="miniGameModeLabel">Wave Shooter Prototype</div>
+                    <div class="game-boot-title" id="miniGameStateTitle">Boot Sequence Ready</div>
+                    <div class="game-boot-sub" id="miniGameStateCopy">Survive random arenas, scavenge dropped weapons, and hold out through escalating waves.</div>
+                    <div class="game-stage-actions" id="miniGameActions"></div>
+                  </div>
+                </div>
+                <div class="game-pickup-prompt" id="miniGamePickupPrompt">Press <strong>E</strong> to pick up weapon</div>
+                <div class="game-hud-mut-row" id="miniGameMutRow" style="display:none"></div>
+              </div>
+            </div>
+            <div class="game-footer-bar">
+              <span id="miniGameFooterLeft">Move: WASD / Arrows · Fire: Mouse / Space · Dash: Shift</span>
+              <span id="miniGameFooterRight">Throw: Q · Pickup: E · Pause: P</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>`;
+  let miniGameCanvas=null;
+  let miniGameCtx=null;
+  let miniGameOverlay=null;
+  let miniGameStageEl=null;
+  let miniGameHudEl=null;
+  let miniGamePickupPrompt=null;
+  let miniGameModeLabelEl=null;
+  let miniGameStateTitleEl=null;
+  let miniGameStateCopyEl=null;
+  let miniGameScoreEl=null;
+  let miniGameHighscoreEl=null;
+  let miniGameHudWeaponEl=null;
+  let miniGameHudAmmoEl=null;
+  let miniGameHudLivesEl=null;
+  let miniGameHudIntegrityEl=null;
+  let miniGameUpgradeTrackEl=null;
+
+  function bindMiniGameDom(){
+    miniGameCanvas=document.getElementById('miniGameCanvas');
+    miniGameCtx=miniGameCanvas?.getContext('2d')||null;
+    miniGameOverlay=document.getElementById('miniGameOverlay');
+    miniGameStageEl=document.getElementById('miniGameStage');
+    miniGameHudEl=document.getElementById('miniGameHud');
+    miniGamePickupPrompt=document.getElementById('miniGamePickupPrompt');
+    miniGameModeLabelEl=document.getElementById('miniGameModeLabel');
+    miniGameStateTitleEl=document.getElementById('miniGameStateTitle');
+    miniGameStateCopyEl=document.getElementById('miniGameStateCopy');
+    miniGameScoreEl=document.getElementById('miniGameScore');
+    miniGameHighscoreEl=document.getElementById('miniGameHighscore');
+    miniGameHudWeaponEl=document.getElementById('miniGameHudWeapon');
+    miniGameHudAmmoEl=document.getElementById('miniGameHudAmmo');
+    miniGameHudLivesEl=document.getElementById('miniGameHudLives');
+    miniGameHudIntegrityEl=document.getElementById('miniGameHudIntegrity');
+    miniGameUpgradeTrackEl=document.getElementById('miniGameMutRow');
+  }
+
+  function ensureMiniGameModal(){
+    if(document.getElementById('miniGameModal')){
+      if(!miniGameCanvas) bindMiniGameDom();
+      return;
+    }
+    document.body.insertAdjacentHTML('beforeend',miniGameModalMarkup);
+    bindMiniGameDom();
+  }
   const miniGameBounds={width:960,height:720};
   const miniGameBasePlayerMaxHealth=145;
   const miniGameBasePlayerSpeed=176;
@@ -2741,6 +2768,7 @@
   }
 
   function openMiniGame(){
+    ensureMiniGameModal();
     initMiniGame();
     openModal('miniGameModal');
     updateMiniGameHud();
@@ -2791,6 +2819,7 @@
   function openFeatures(){openModal('featuresModal');}
   function openRewards(){openModal('rewardsModal');}
 </script>
+
 
 
 
